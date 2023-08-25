@@ -16,10 +16,10 @@ Future<bool> readSmsPermission() async {
 //          sendToBubble(Message.message);
 
     print("Message");
-    return false;
+    return true;
   } else {
     await Permission.sms.request();
-    return true;
+    return false;
   }
   // Add your function code here!
 }

@@ -73,6 +73,21 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                             transacNote: (_model.readMessages?[_model.looooop!])
                                 ?.toString(),
                           ));
+                          await showDialog(
+                            context: context,
+                            builder: (alertDialogContext) {
+                              return AlertDialog(
+                                title: Text('qwertyuio'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(alertDialogContext),
+                                    child: Text('Ok'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                           setState(() {
                             _model.looooop = _model.looooop! + 1;
                           });
