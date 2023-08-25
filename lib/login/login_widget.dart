@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -24,7 +25,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     super.initState();
     _model = createModel(context, () => LoginModel());
 
-    _model.textController ??= TextEditingController();
+    _model.emailTextController ??= TextEditingController();
   }
 
   @override
@@ -91,7 +92,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                         ),
                       ),
                       TextFormField(
-                        controller: _model.textController,
+                        controller: _model.emailTextController,
                         autofocus: true,
                         obscureText: false,
                         decoration: InputDecoration(
@@ -142,15 +143,27 @@ class _LoginWidgetState extends State<LoginWidget> {
                               color: Color(0xFF667085),
                               fontSize: 16.0,
                             ),
-                        validator:
-                            _model.textControllerValidator.asValidator(context),
+                        validator: _model.emailTextControllerValidator
+                            .asValidator(context),
                       ),
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                         child: FFButtonWidget(
                           onPressed: () async {
-                            context.pushNamed('sms_permission');
+                            GoRouter.of(context).prepareAuthEvent();
+
+                            final user = await authManager.signInWithEmail(
+                              context,
+                              _model.emailTextController.text,
+                              'adullahmustafaf@040gmail.com',
+                            );
+                            if (user == null) {
+                              return;
+                            }
+
+                            context.pushNamedAuth(
+                                'sms_permission', context.mounted);
                           },
                           text: 'Continue',
                           options: FFButtonOptions(
@@ -179,6 +192,14 @@ class _LoginWidgetState extends State<LoginWidget> {
                     ],
                   ),
                 ),
+              ),
+              Text(
+                'adullahmustafaf@040gmail.com',
+                style: FlutterFlowTheme.of(context).bodyMedium,
+              ),
+              Text(
+                'adullahmustafaf@040gmail.com',
+                style: FlutterFlowTheme.of(context).bodyMedium,
               ),
             ],
           ),

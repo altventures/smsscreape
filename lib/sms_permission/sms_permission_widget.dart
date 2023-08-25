@@ -1,7 +1,10 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +66,17 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                       _model.permissionRes = await actions.readSmsPermission();
                       if (_model.permissionRes!) {
                         _model.readMessages = await actions.readMessages();
+                        while (_model.looooop == _model.readMessages?.length) {
+                          await TransactionsRecord.createDoc(
+                                  currentUserReference!)
+                              .set(createTransactionsRecordData(
+                            transacNote: (_model.readMessages?[_model.looooop!])
+                                ?.toString(),
+                          ));
+                          setState(() {
+                            _model.looooop = _model.looooop! + 1;
+                          });
+                        }
 
                         context.pushNamed('permission_successful');
                       } else {
