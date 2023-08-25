@@ -31,5 +31,12 @@ Future<List<dynamic>> readMessages() async {
     };
   }).toList();
 
-  return messagesJson;
+  // Filter the messages to only include transaction messages
+  final transactionMessages = messagesJson.where((message) {
+    final body = message['body'];
+    return body.contains('your A/C No.') &&
+        body.contains('has been debited by');
+  }).toList();
+
+  return transactionMessages;
 }
