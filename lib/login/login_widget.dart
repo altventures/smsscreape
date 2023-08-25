@@ -152,11 +152,23 @@ class _LoginWidgetState extends State<LoginWidget> {
                         child: FFButtonWidget(
                           onPressed: () async {
                             GoRouter.of(context).prepareAuthEvent();
+                            if (_model.emailTextController.text !=
+                                _model.emailTextController.text) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Passwords don\'t match!',
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
 
-                            final user = await authManager.signInWithEmail(
+                            final user =
+                                await authManager.createAccountWithEmail(
                               context,
                               _model.emailTextController.text,
-                              'adullahmustafaf@040gmail.com',
+                              _model.emailTextController.text,
                             );
                             if (user == null) {
                               return;
