@@ -212,7 +212,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                     .fromSTEB(
                                                         0.0, 0.0, 0.0, 2.0),
                                                 child: Text(
-                                                  'USD ${listViewTransactionsRecord.transacAmount.toString()}',
+                                                  'USD ${listViewTransactionsRecord.amount.toString()}',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium,

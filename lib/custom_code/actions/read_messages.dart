@@ -36,14 +36,14 @@ Future<List<dynamic>> readMessages() async {
     final amount = amountMatch != null
         ? double.tryParse(amountMatch.group(1) ?? '')
         : null;
-    final date = DateTime.fromMillisecondsSinceEpoch(message.date as int);
-    final unixTimestamp = date.millisecondsSinceEpoch ~/ 1000;
+    final date = message.date;
+    final unixTimestamp = (date!.millisecondsSinceEpoch / 1000).round();
 
     return {
       'body': message.body,
       'address': message.address,
-      'date': DateTime.fromMillisecondsSinceEpoch(message.date as int),
-      'dateSent': DateTime.fromMillisecondsSinceEpoch(message.dateSent as int),
+      'date': message.date,
+      'dateSent': message.dateSent,
       'id': message.id,
       'amount': amount,
       'unixTime': unixTimestamp

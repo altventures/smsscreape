@@ -16,11 +16,6 @@ class TransactionsRecord extends FirestoreRecord {
     _initializeFields();
   }
 
-  // "transac_amount" field.
-  int? _transacAmount;
-  int get transacAmount => _transacAmount ?? 0;
-  bool hasTransacAmount() => _transacAmount != null;
-
   // "transac_date" field.
   DateTime? _transacDate;
   DateTime? get transacDate => _transacDate;
@@ -36,13 +31,18 @@ class TransactionsRecord extends FirestoreRecord {
   int get dateUnix => _dateUnix ?? 0;
   bool hasDateUnix() => _dateUnix != null;
 
+  // "amount" field.
+  double? _amount;
+  double get amount => _amount ?? 0.0;
+  bool hasAmount() => _amount != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
-    _transacAmount = castToType<int>(snapshotData['transac_amount']);
     _transacDate = snapshotData['transac_date'] as DateTime?;
     _transacNote = snapshotData['transac_note'] as String?;
     _dateUnix = castToType<int>(snapshotData['date_unix']);
+    _amount = castToType<double>(snapshotData['amount']);
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -85,17 +85,17 @@ class TransactionsRecord extends FirestoreRecord {
 }
 
 Map<String, dynamic> createTransactionsRecordData({
-  int? transacAmount,
   DateTime? transacDate,
   String? transacNote,
   int? dateUnix,
+  double? amount,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
-      'transac_amount': transacAmount,
       'transac_date': transacDate,
       'transac_note': transacNote,
       'date_unix': dateUnix,
+      'amount': amount,
     }.withoutNulls,
   );
 
@@ -108,15 +108,15 @@ class TransactionsRecordDocumentEquality
 
   @override
   bool equals(TransactionsRecord? e1, TransactionsRecord? e2) {
-    return e1?.transacAmount == e2?.transacAmount &&
-        e1?.transacDate == e2?.transacDate &&
+    return e1?.transacDate == e2?.transacDate &&
         e1?.transacNote == e2?.transacNote &&
-        e1?.dateUnix == e2?.dateUnix;
+        e1?.dateUnix == e2?.dateUnix &&
+        e1?.amount == e2?.amount;
   }
 
   @override
   int hash(TransactionsRecord? e) => const ListEquality()
-      .hash([e?.transacAmount, e?.transacDate, e?.transacNote, e?.dateUnix]);
+      .hash([e?.transacDate, e?.transacNote, e?.dateUnix, e?.amount]);
 
   @override
   bool isValidKey(Object? o) => o is TransactionsRecord;
