@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "831486713830",
+    "project_id": "smstrackingapp-39dd2",
+    "storage_bucket": "smstrackingapp-39dd2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831486713830:android:4a5b0c248037bb598c8027",
+        "android_client_info": {
+          "package_name": "com.mycompany.smstrackingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831486713830-vrqebnhbbc418oifnu2v7hsvc4bfu372.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDboaoBg07gZWtU4sYZY2mtoQT2VMDH3PI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831486713830-vrqebnhbbc418oifnu2v7hsvc4bfu372.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "831486713830-1qbntun0qhu655tpmdbqbncku67oqtmk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.smstrackingapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
