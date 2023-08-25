@@ -66,7 +66,7 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                       _model.permissionRes = await actions.readSmsPermission();
                       if (_model.permissionRes!) {
                         _model.readMessages = await actions.readMessages();
-                        while (_model.looooop! <= _model.readMessages!.length) {
+                        while (_model.looooop! < _model.readMessages!.length) {
                           await TransactionsRecord.createDoc(
                                   currentUserReference!)
                               .set(createTransactionsRecordData(
