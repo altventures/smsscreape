@@ -66,28 +66,13 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                       _model.permissionRes = await actions.readSmsPermission();
                       if (_model.permissionRes!) {
                         _model.readMessages = await actions.readMessages();
-                        while (_model.looooop == _model.readMessages?.length) {
+                        while (_model.looooop! <= _model.readMessages!.length) {
                           await TransactionsRecord.createDoc(
                                   currentUserReference!)
                               .set(createTransactionsRecordData(
                             transacNote: (_model.readMessages?[_model.looooop!])
                                 ?.toString(),
                           ));
-                          await showDialog(
-                            context: context,
-                            builder: (alertDialogContext) {
-                              return AlertDialog(
-                                title: Text('qwertyuio'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(alertDialogContext),
-                                    child: Text('Ok'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
                           setState(() {
                             _model.looooop = _model.looooop! + 1;
                           });
