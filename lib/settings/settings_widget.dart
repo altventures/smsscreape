@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'settings_model.dart';
@@ -42,7 +43,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.white,
         body: SafeArea(
           top: true,
           child: Column(
@@ -56,15 +57,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     FlutterFlowIconButton(
-                      borderColor: FlutterFlowTheme.of(context).primary,
                       borderRadius: 20.0,
                       borderWidth: 1.0,
                       buttonSize: 40.0,
-                      fillColor: FlutterFlowTheme.of(context).accent1,
-                      icon: Icon(
-                        Icons.add,
+                      icon: FaIcon(
+                        FontAwesomeIcons.arrowLeft,
                         color: FlutterFlowTheme.of(context).primaryText,
-                        size: 24.0,
+                        size: 20.0,
                       ),
                       onPressed: () {
                         print('IconButton pressed ...');
@@ -72,10 +71,15 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
                       child: Text(
                         'Settings',
-                        style: FlutterFlowTheme.of(context).bodyMedium,
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Inter',
+                              color: Color(0xFF7F56D9),
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                            ),
                       ),
                     ),
                   ],
@@ -136,7 +140,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                     children: [
                       Text(
                         'Personal Info',
-                        style: FlutterFlowTheme.of(context).bodyMedium,
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Inter',
+                              color: Color(0xFF7F56D9),
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                            ),
                       ),
                       Padding(
                         padding:
@@ -147,39 +156,54 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           obscureText: false,
                           decoration: InputDecoration(
                             labelText: 'Display Name',
-                            labelStyle:
-                                FlutterFlowTheme.of(context).labelMedium,
-                            hintStyle: FlutterFlowTheme.of(context).labelMedium,
-                            enabledBorder: UnderlineInputBorder(
+                            labelStyle: FlutterFlowTheme.of(context)
+                                .labelMedium
+                                .override(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16.0,
+                                ),
+                            hintStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16.0,
+                                ),
+                            enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).alternate,
+                                color: Color(0xFFD0D5DD),
                                 width: 2.0,
                               ),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            focusedBorder: UnderlineInputBorder(
+                            focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).primary,
                                 width: 2.0,
                               ),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            errorBorder: UnderlineInputBorder(
+                            errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 2.0,
                               ),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            focusedErrorBorder: UnderlineInputBorder(
+                            focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 2.0,
                               ),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
+                            filled: true,
                           ),
-                          style: FlutterFlowTheme.of(context).bodyMedium,
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF667085),
+                                    fontSize: 16.0,
+                                  ),
                           validator: _model.textControllerValidator
                               .asValidator(context),
                         ),
@@ -195,7 +219,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               setState(() => _model.dropDownValue2 = val),
                           width: 300.0,
                           height: 50.0,
-                          textStyle: FlutterFlowTheme.of(context).bodyMedium,
+                          textStyle:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF667085),
+                                    fontSize: 16.0,
+                                  ),
                           hintText: 'City',
                           icon: Icon(
                             Icons.keyboard_arrow_down_rounded,
@@ -226,7 +255,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               setState(() => _model.dropDownValue3 = val),
                           width: 300.0,
                           height: 50.0,
-                          textStyle: FlutterFlowTheme.of(context).bodyMedium,
+                          textStyle:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF667085),
+                                    fontSize: 16.0,
+                                  ),
                           hintText: 'State',
                           icon: Icon(
                             Icons.keyboard_arrow_down_rounded,
@@ -251,7 +285,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                         child: Text(
                           'Logout',
-                          style: FlutterFlowTheme.of(context).bodyMedium,
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF7F56D9),
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                       ),
                       Padding(

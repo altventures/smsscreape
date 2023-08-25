@@ -49,34 +49,35 @@ class _HomeWidgetState extends State<HomeWidget> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Hello World',
-                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        AuthUserStreamWidget(
+                          builder: (context) => Text(
+                            currentUserDisplayName,
+                            style: FlutterFlowTheme.of(context).bodyMedium,
+                          ),
                         ),
                         Text(
-                          'Hello World',
+                          currentUserEmail,
                           style: FlutterFlowTheme.of(context).bodyMedium,
                         ),
                       ],
                     ),
                     FlutterFlowIconButton(
-                      borderColor: FlutterFlowTheme.of(context).primary,
                       borderRadius: 20.0,
                       borderWidth: 1.0,
-                      buttonSize: 40.0,
-                      fillColor: FlutterFlowTheme.of(context).accent1,
+                      buttonSize: 50.0,
                       icon: Icon(
-                        Icons.add,
+                        Icons.settings,
                         color: FlutterFlowTheme.of(context).primaryText,
-                        size: 24.0,
+                        size: 30.0,
                       ),
                       onPressed: () {
                         print('IconButton pressed ...');
@@ -101,8 +102,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Hello World',
-                            style: FlutterFlowTheme.of(context).bodyMedium,
+                            'Transaction History',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'Inter',
+                                  color: Color(0xFF7F56D9),
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
                           ),
                           FFButtonWidget(
                             onPressed: () {
@@ -169,62 +177,71 @@ class _HomeWidgetState extends State<HomeWidget> {
                                 final listViewTransactionsRecord =
                                     listViewTransactionsRecordList[
                                         listViewIndex];
-                                return Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      width: 23.0,
-                                      height: 75.0,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        width: 100.0,
-                                        height: 75.0,
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                return Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 5.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 0.0, 5.0, 0.0),
+                                        child: Container(
+                                          width: 23.0,
+                                          height: 75.0,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFF7B61FF),
+                                          ),
                                         ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 0.0, 0.0, 2.0),
-                                              child: Text(
-                                                'USD ${listViewTransactionsRecord.transacAmount.toString()}',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 0.0, 0.0, 2.0),
-                                              child: Text(
-                                                '${listViewTransactionsRecord.transacDate?.toString()}',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium,
-                                              ),
-                                            ),
-                                            Text(
-                                              listViewTransactionsRecord
-                                                  .transacNote,
-                                              style:
-                                                  FlutterFlowTheme.of(context)
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          width: 100.0,
+                                          height: 75.0,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 0.0, 0.0, 2.0),
+                                                child: Text(
+                                                  'USD ${listViewTransactionsRecord.transacAmount.toString()}',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
                                                       .bodyMedium,
-                                            ),
-                                          ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 0.0, 0.0, 2.0),
+                                                child: Text(
+                                                  '${listViewTransactionsRecord.transacDate?.toString()}',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium,
+                                                ),
+                                              ),
+                                              Text(
+                                                listViewTransactionsRecord
+                                                    .transacNote,
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 );
                               },
                             );
