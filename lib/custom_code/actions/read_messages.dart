@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 
 Future<List<dynamic>> readMessages() async {
-  // Add your function code here!
   SmsQuery query = SmsQuery();
   final messages = await query.querySms(
     kinds: [
@@ -21,22 +20,29 @@ Future<List<dynamic>> readMessages() async {
   );
   print(messages.runtimeType);
 
-  List<Map<String, dynamic>> messagesJson = messages.map((message) {
-    return {
-      'body': message.body,
-      'address': message.address,
-      'date': message.date,
-      'dateSent': message.dateSent,
-      'id': message.id
-    };
-  }).toList();
-
   // Filter the messages to only include transaction messages
-  final transactionMessages = messagesJson.where((message) {
-    final body = message['body'];
+  final transactionMessages = messages.where((message) {
+    final body = message.body;
     return body.contains('your A/C No.') &&
         body.contains('has been debited by');
   }).toList();
 
-  return transactionMessages;
+  List<Map<String, dynamic>> messagesJson = transactionMessages.map((message) {
+    // Extract the transaction amount from the message body
+    final amountRegex = RegExp(r'PKR ([\d.]+)');
+    final amountMatch = amountRegex.firstMatch(message.body);
+    final amount =
+        amountMatch != null ? double.parse(amountMatch.group(1)) : null;
+
+    return {
+      'body': message.body,
+      'address': message.address,
+      'date': DateTime.fromMillisecondsSinceEpoch(message.date),
+      'dateSent': DateTime.fromMillisecondsSinceEpoch(message.dateSent),
+      'id': message.id,
+      'amount': amount,
+    };
+  }).toList();
+
+  return messagesJson;
 }
