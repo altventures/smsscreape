@@ -31,12 +31,18 @@ class TransactionsRecord extends FirestoreRecord {
   String get transacNote => _transacNote ?? '';
   bool hasTransacNote() => _transacNote != null;
 
+  // "date_unix" field.
+  int? _dateUnix;
+  int get dateUnix => _dateUnix ?? 0;
+  bool hasDateUnix() => _dateUnix != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
     _transacAmount = castToType<int>(snapshotData['transac_amount']);
     _transacDate = snapshotData['transac_date'] as DateTime?;
     _transacNote = snapshotData['transac_note'] as String?;
+    _dateUnix = castToType<int>(snapshotData['date_unix']);
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -82,12 +88,14 @@ Map<String, dynamic> createTransactionsRecordData({
   int? transacAmount,
   DateTime? transacDate,
   String? transacNote,
+  int? dateUnix,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'transac_amount': transacAmount,
       'transac_date': transacDate,
       'transac_note': transacNote,
+      'date_unix': dateUnix,
     }.withoutNulls,
   );
 
@@ -102,12 +110,13 @@ class TransactionsRecordDocumentEquality
   bool equals(TransactionsRecord? e1, TransactionsRecord? e2) {
     return e1?.transacAmount == e2?.transacAmount &&
         e1?.transacDate == e2?.transacDate &&
-        e1?.transacNote == e2?.transacNote;
+        e1?.transacNote == e2?.transacNote &&
+        e1?.dateUnix == e2?.dateUnix;
   }
 
   @override
   int hash(TransactionsRecord? e) => const ListEquality()
-      .hash([e?.transacAmount, e?.transacDate, e?.transacNote]);
+      .hash([e?.transacAmount, e?.transacDate, e?.transacNote, e?.dateUnix]);
 
   @override
   bool isValidKey(Object? o) => o is TransactionsRecord;

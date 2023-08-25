@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import 'index.dart'; // Imports other custom actions
+
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 
 Future<List<dynamic>> readMessages() async {
@@ -23,24 +25,28 @@ Future<List<dynamic>> readMessages() async {
   // Filter the messages to only include transaction messages
   final transactionMessages = messages.where((message) {
     final body = message.body;
-    return body.contains('your A/C No.') &&
-        body.contains('has been debited by');
+    return body!.contains('your A/C No.') == true &&
+        body!.contains('has been debited by') == true;
   }).toList();
 
   List<Map<String, dynamic>> messagesJson = transactionMessages.map((message) {
     // Extract the transaction amount from the message body
-    final amountRegex = RegExp(r'PKR ([\d.]+)');
-    final amountMatch = amountRegex.firstMatch(message.body);
-    final amount =
-        amountMatch != null ? double.parse(amountMatch.group(1)) : null;
+    final amountRegex = RegExp(r'PKR ([\d\\.]+)');
+    final amountMatch = amountRegex.firstMatch(message.body ?? '');
+    final amount = amountMatch != null
+        ? double.tryParse(amountMatch.group(1) ?? '')
+        : null;
+    final date = DateTime.fromMillisecondsSinceEpoch(message.date as int);
+    final unixTimestamp = date.millisecondsSinceEpoch ~/ 1000;
 
     return {
       'body': message.body,
       'address': message.address,
-      'date': DateTime.fromMillisecondsSinceEpoch(message.date),
-      'dateSent': DateTime.fromMillisecondsSinceEpoch(message.dateSent),
+      'date': DateTime.fromMillisecondsSinceEpoch(message.date as int),
+      'dateSent': DateTime.fromMillisecondsSinceEpoch(message.dateSent as int),
       'id': message.id,
       'amount': amount,
+      'unixTime': unixTimestamp
     };
   }).toList();
 

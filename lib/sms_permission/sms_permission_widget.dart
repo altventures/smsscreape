@@ -69,7 +69,16 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                         while (_model.looooop! < _model.readMessages!.length) {
                           await TransactionsRecord.createDoc(
                                   currentUserReference!)
-                              .set(createTransactionsRecordData());
+                              .set(createTransactionsRecordData(
+                            transacAmount: getJsonField(
+                              _model.readMessages?[_model.looooop!],
+                              r'''$.amount''',
+                            ),
+                            dateUnix: getJsonField(
+                              _model.readMessages?[_model.looooop!],
+                              r'''$.unixTime''',
+                            ),
+                          ));
                           setState(() {
                             _model.looooop = _model.looooop! + 1;
                           });
