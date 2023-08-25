@@ -86,12 +86,12 @@ class _PermissionSuccessfulWidgetState
                   },
                   text: 'Continue',
                   options: FFButtonOptions(
-                    height: 40.0,
+                    height: 56.0,
                     padding:
                         EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                     iconPadding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: FlutterFlowTheme.of(context).primary,
+                    color: Color(0xFF7F56D9),
                     textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                           fontFamily: 'Readex Pro',
                           color: Colors.white,

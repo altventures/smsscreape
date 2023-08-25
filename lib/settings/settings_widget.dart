@@ -93,7 +93,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   children: [
                     Text(
                       'Scrapping Status',
-                      style: FlutterFlowTheme.of(context).bodyMedium,
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Inter',
+                            color: Color(0xFF667085),
+                            fontWeight: FontWeight.w600,
+                          ),
                     ),
                     FlutterFlowDropDown<String>(
                       controller: _model.dropDownValueController1 ??=
@@ -160,12 +164,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                 .labelMedium
                                 .override(
                                   fontFamily: 'Inter',
+                                  color: Color(0xFF667085),
                                   fontSize: 16.0,
                                 ),
                             hintStyle: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
                                   fontFamily: 'Inter',
+                                  color: Color(0xFF667085),
                                   fontSize: 16.0,
                                 ),
                             enabledBorder: OutlineInputBorder(
@@ -197,6 +203,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             filled: true,
+                            fillColor: Colors.white,
                           ),
                           style:
                               FlutterFlowTheme.of(context).bodyMedium.override(
@@ -299,7 +306,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                         child: Text(
                           'Delete Account',
-                          style: FlutterFlowTheme.of(context).bodyMedium,
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFFC4320A),
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                       ),
                     ],
