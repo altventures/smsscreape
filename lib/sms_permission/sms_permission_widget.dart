@@ -129,6 +129,26 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                               lastRecordTime: getCurrentTimestamp,
                               noOfFields: _model.looooop,
                             ));
+                            await showDialog(
+                              context: context,
+                              builder: (alertDialogContext) {
+                                return AlertDialog(
+                                  title: Text('Success'),
+                                  content: Text(
+                                      '${_model.looooop?.toString()} entered into the Database'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(alertDialogContext),
+                                      child: Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            setState(() {
+                              _model.looooop = 0;
+                            });
 
                             context.pushNamed('permission_successful');
                           } else {
@@ -173,6 +193,35 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
+                      ),
+                    ),
+                    FFButtonWidget(
+                      onPressed: () async {
+                        GoRouter.of(context).prepareAuthEvent();
+                        await authManager.signOut();
+                        GoRouter.of(context).clearRedirectLocation();
+
+                        context.pushNamedAuth('Login', context.mounted);
+                      },
+                      text: 'Button',
+                      options: FFButtonOptions(
+                        height: 40.0,
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            24.0, 0.0, 24.0, 0.0),
+                        iconPadding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        color: FlutterFlowTheme.of(context).primary,
+                        textStyle:
+                            FlutterFlowTheme.of(context).titleSmall.override(
+                                  fontFamily: 'Readex Pro',
+                                  color: Colors.white,
+                                ),
+                        elevation: 3.0,
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                   ],

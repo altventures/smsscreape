@@ -1,10 +1,14 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/random_data_util.dart' as random_data;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'login_model.dart';
 export 'login_model.dart';
 
@@ -174,8 +178,68 @@ class _LoginWidgetState extends State<LoginWidget> {
                               return;
                             }
 
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'acc xreated',
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
+
+                            await currentUserReference!
+                                .update(createUsersRecordData(
+                              otp: random_data.randomInteger(1000, 9999),
+                            ));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'otp generated',
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
+                            await launchUrl(Uri(
+                                scheme: 'mailto',
+                                path: _model.emailTextController.text,
+                                query: {
+                                  'subject': 'OTP CODE',
+                                  'body':
+                                      'Hello, Here is your otp: ${valueOrDefault(currentUserDocument?.otp, 0).toString()}',
+                                }
+                                    .entries
+                                    .map((MapEntry<String, String> e) =>
+                                        '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                    .join('&')));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'email sent',
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
+
                             context.pushNamedAuth(
-                                'sms_permission', context.mounted);
+                                'verification', context.mounted);
                           },
                           text: 'Continue',
                           options: FFButtonOptions(
