@@ -19,6 +19,10 @@ Future<bool> readSmsPermission() async {
     return true;
   } else {
     await Permission.sms.request();
+    var permission = await Permission.sms.status;
+    if (permission.isGranted) {
+      return true;
+    }
     return false;
   }
   // Add your function code here!
