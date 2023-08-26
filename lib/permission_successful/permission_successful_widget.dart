@@ -81,8 +81,8 @@ class _PermissionSuccessfulWidgetState
                   ),
                 ),
                 FFButtonWidget(
-                  onPressed: () {
-                    print('Button pressed ...');
+                  onPressed: () async {
+                    context.pushNamed('Home');
                   },
                   text: 'Continue',
                   options: FFButtonOptions(
