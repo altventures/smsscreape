@@ -135,7 +135,7 @@ class _VerificationWidgetState extends State<VerificationWidget> {
                                 onTap: () async {
                                   await currentUserReference!
                                       .update(createUsersRecordData(
-                                    otp: random_data.randomInteger(4, 4),
+                                    otp: random_data.randomInteger(1000, 9999),
                                   ));
                                   await launchUrl(Uri(
                                       scheme: 'mailto',
