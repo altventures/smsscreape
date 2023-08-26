@@ -47,104 +47,137 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
           top: true,
           child: Padding(
             padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'To record your transactional data, we require access to to access your SMS. Please click the button below',
-                  textAlign: TextAlign.center,
-                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily: 'Inter',
-                        fontSize: 18.0,
+            child: FutureBuilder<List<LogsRecord>>(
+              future: queryLogsRecordOnce(
+                parent: currentUserReference,
+                queryBuilder: (logsRecord) =>
+                    logsRecord.orderBy('lastRecordTime', descending: true),
+                singleRecord: true,
+              ),
+              builder: (context, snapshot) {
+                // Customize what your widget looks like when it's loading.
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: SizedBox(
+                      width: 50.0,
+                      height: 50.0,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          FlutterFlowTheme.of(context).primary,
+                        ),
                       ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                  child: FFButtonWidget(
-                    onPressed: () async {
-                      _model.permissionRes = await actions.readSmsPermission();
-                      if (_model.permissionRes!) {
-                        _model.readMessages = await actions.readMessages();
-                        while (_model.looooop! < _model.readMessages!.length) {
-                          _model.transTime =
-                              await actions.unixTimestampToDateAndTime(
-                            getJsonField(
-                              _model.readMessages![_model.looooop!],
-                              r'''$.unixTime''',
-                            ),
-                          );
-
-                          await TransactionsRecord.createDoc(
-                                  currentUserReference!)
-                              .set(createTransactionsRecordData(
-                            dateUnix: getJsonField(
-                              _model.readMessages?[_model.looooop!],
-                              r'''$.unixTime''',
-                            ),
-                            amount: getJsonField(
-                              _model.readMessages?[_model.looooop!],
-                              r'''$.amount''',
-                            ),
-                            transacDate: _model.transTime,
-                          ));
-                          setState(() {
-                            _model.looooop = _model.looooop! + 1;
-                          });
-                        }
-
-                        await LogsRecord.createDoc(currentUserReference!)
-                            .set(createLogsRecordData(
-                          lastRecordTime: getCurrentTimestamp,
-                          noOfFields: _model.looooop,
-                        ));
-
-                        context.pushNamed('permission_successful');
-                      } else {
-                        await showDialog(
-                          context: context,
-                          builder: (alertDialogContext) {
-                            return AlertDialog(
-                              title: Text('Error'),
-                              content: Text('Permission Denied'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(alertDialogContext),
-                                  child: Text('Permission Denied'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-
-                      setState(() {});
-                    },
-                    text: 'Grant Sms Access ',
-                    options: FFButtonOptions(
-                      height: 40.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: Colors.white,
-                      textStyle:
-                          FlutterFlowTheme.of(context).titleSmall.override(
-                                fontFamily: 'Inter',
-                                color: Color(0xFF344054),
-                                fontWeight: FontWeight.w600,
-                              ),
-                      elevation: 3.0,
-                      borderSide: BorderSide(
-                        color: Color(0xFFD0D5DD),
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                  ),
-                ),
-              ],
+                  );
+                }
+                List<LogsRecord> columnLogsRecordList = snapshot.data!;
+                final columnLogsRecord = columnLogsRecordList.isNotEmpty
+                    ? columnLogsRecordList.first
+                    : null;
+                return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'To record your transactional data, we require access to to access your SMS. Please click the button below',
+                      textAlign: TextAlign.center,
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Inter',
+                            fontSize: 18.0,
+                          ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+                      child: FFButtonWidget(
+                        onPressed: () async {
+                          _model.permissionRes =
+                              await actions.readSmsPermission();
+                          if (_model.permissionRes!) {
+                            _model.readMessages = await actions.readMessages(
+                              columnLogsRecord,
+                            );
+                            while (
+                                _model.looooop! < _model.readMessages!.length) {
+                              _model.transTime =
+                                  await actions.unixTimestampToDateAndTime(
+                                getJsonField(
+                                  _model.readMessages![_model.looooop!],
+                                  r'''$.unixTime''',
+                                ),
+                              );
+
+                              await TransactionsRecord.createDoc(
+                                      currentUserReference!)
+                                  .set(createTransactionsRecordData(
+                                dateUnix: getJsonField(
+                                  _model.readMessages?[_model.looooop!],
+                                  r'''$.unixTime''',
+                                ),
+                                amount: getJsonField(
+                                  _model.readMessages?[_model.looooop!],
+                                  r'''$.amount''',
+                                ),
+                                transacDate: _model.transTime,
+                              ));
+                              setState(() {
+                                _model.looooop = _model.looooop! + 1;
+                              });
+                            }
+
+                            await LogsRecord.createDoc(currentUserReference!)
+                                .set(createLogsRecordData(
+                              lastRecordTime: getCurrentTimestamp,
+                              noOfFields: _model.looooop,
+                            ));
+
+                            context.pushNamed('permission_successful');
+                          } else {
+                            await showDialog(
+                              context: context,
+                              builder: (alertDialogContext) {
+                                return AlertDialog(
+                                  title: Text('Error'),
+                                  content: Text('Permission Denied'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(alertDialogContext),
+                                      child: Text('Permission Denied'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+
+                          setState(() {});
+                        },
+                        text: 'Grant Sms Access ',
+                        options: FFButtonOptions(
+                          height: 40.0,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              24.0, 0.0, 24.0, 0.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: Colors.white,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF344054),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                          elevation: 3.0,
+                          borderSide: BorderSide(
+                            color: Color(0xFFD0D5DD),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

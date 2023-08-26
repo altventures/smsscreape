@@ -11,7 +11,7 @@ import 'index.dart'; // Imports other custom actions
 
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 
-Future<List<dynamic>> readMessages() async {
+Future<List<dynamic>> readMessages(LogsRecord? lastLog) async {
   SmsQuery query = SmsQuery();
   final messages = await query.querySms(
     kinds: [
@@ -49,6 +49,13 @@ Future<List<dynamic>> readMessages() async {
       'unixTime': unixTimestamp
     };
   }).toList();
+
+  if (lastLog != null) {
+    // Filter the messages to only include new messages
+    messagesJson = messagesJson.where((message) {
+      return message['unixTime'] > lastLog.lastRecordTime;
+    }).toList();
+  }
 
   return messagesJson;
 }
