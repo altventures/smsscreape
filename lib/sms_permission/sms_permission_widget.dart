@@ -67,6 +67,14 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                       if (_model.permissionRes!) {
                         _model.readMessages = await actions.readMessages();
                         while (_model.looooop! < _model.readMessages!.length) {
+                          _model.transTime =
+                              await actions.unixTimestampToDateAndTime(
+                            getJsonField(
+                              _model.readMessages![_model.looooop!],
+                              r'''$.unixTime''',
+                            ),
+                          );
+
                           await TransactionsRecord.createDoc(
                                   currentUserReference!)
                               .set(createTransactionsRecordData(
@@ -78,6 +86,7 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                               _model.readMessages?[_model.looooop!],
                               r'''$.amount''',
                             ),
+                            transacDate: _model.transTime,
                           ));
                           setState(() {
                             _model.looooop = _model.looooop! + 1;

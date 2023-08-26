@@ -21,6 +21,8 @@ class SmsPermissionModel extends FlutterFlowModel {
   bool? permissionRes;
   // Stores action output result for [Custom Action - readMessages] action in Button widget.
   List<dynamic>? readMessages;
+  // Stores action output result for [Custom Action - unixTimestampToDateAndTime] action in Button widget.
+  DateTime? transTime;
 
   /// Initialization and disposal methods.
 
