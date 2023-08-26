@@ -21,10 +21,16 @@ class LogsRecord extends FirestoreRecord {
   DateTime? get lastRecordTime => _lastRecordTime;
   bool hasLastRecordTime() => _lastRecordTime != null;
 
+  // "noOfFields" field.
+  int? _noOfFields;
+  int get noOfFields => _noOfFields ?? 0;
+  bool hasNoOfFields() => _noOfFields != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
     _lastRecordTime = snapshotData['lastRecordTime'] as DateTime?;
+    _noOfFields = castToType<int>(snapshotData['noOfFields']);
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -67,10 +73,12 @@ class LogsRecord extends FirestoreRecord {
 
 Map<String, dynamic> createLogsRecordData({
   DateTime? lastRecordTime,
+  int? noOfFields,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'lastRecordTime': lastRecordTime,
+      'noOfFields': noOfFields,
     }.withoutNulls,
   );
 
@@ -82,11 +90,13 @@ class LogsRecordDocumentEquality implements Equality<LogsRecord> {
 
   @override
   bool equals(LogsRecord? e1, LogsRecord? e2) {
-    return e1?.lastRecordTime == e2?.lastRecordTime;
+    return e1?.lastRecordTime == e2?.lastRecordTime &&
+        e1?.noOfFields == e2?.noOfFields;
   }
 
   @override
-  int hash(LogsRecord? e) => const ListEquality().hash([e?.lastRecordTime]);
+  int hash(LogsRecord? e) =>
+      const ListEquality().hash([e?.lastRecordTime, e?.noOfFields]);
 
   @override
   bool isValidKey(Object? o) => o is LogsRecord;

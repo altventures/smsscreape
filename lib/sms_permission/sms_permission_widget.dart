@@ -84,6 +84,12 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                           });
                         }
 
+                        await LogsRecord.createDoc(currentUserReference!)
+                            .set(createLogsRecordData(
+                          lastRecordTime: getCurrentTimestamp,
+                          noOfFields: _model.looooop,
+                        ));
+
                         context.pushNamed('permission_successful');
                       } else {
                         await showDialog(
