@@ -151,60 +151,65 @@ class _HomeWidgetState extends State<HomeWidget> {
                                         await actions.readMessages(
                                       columnLogsRecord,
                                     );
-                                    while (_model.looooop! <
-                                        _model.readMessages!.length) {
-                                      _model.transTime = await actions
-                                          .unixTimestampToDateAndTime(
-                                        getJsonField(
-                                          _model.readMessages![_model.looooop!],
-                                          r'''$.unixTime''',
-                                        ),
-                                      );
+                                    if (_model.readMessages?.length != 0) {
+                                      while (_model.looooop! <
+                                          _model.readMessages!.length) {
+                                        _model.transTime = await actions
+                                            .unixTimestampToDateAndTime(
+                                          getJsonField(
+                                            _model
+                                                .readMessages![_model.looooop!],
+                                            r'''$.unixTime''',
+                                          ),
+                                        );
 
-                                      await TransactionsRecord.createDoc(
+                                        await TransactionsRecord.createDoc(
+                                                currentUserReference!)
+                                            .set(createTransactionsRecordData(
+                                          dateUnix: getJsonField(
+                                            _model
+                                                .readMessages?[_model.looooop!],
+                                            r'''$.unixTime''',
+                                          ),
+                                          amount: getJsonField(
+                                            _model
+                                                .readMessages?[_model.looooop!],
+                                            r'''$.amount''',
+                                          ),
+                                          transacDate: _model.transTime,
+                                        ));
+                                        setState(() {
+                                          _model.looooop = _model.looooop! + 1;
+                                        });
+                                      }
+
+                                      await LogsRecord.createDoc(
                                               currentUserReference!)
-                                          .set(createTransactionsRecordData(
-                                        dateUnix: getJsonField(
-                                          _model.readMessages?[_model.looooop!],
-                                          r'''$.unixTime''',
-                                        ),
-                                        amount: getJsonField(
-                                          _model.readMessages?[_model.looooop!],
-                                          r'''$.amount''',
-                                        ),
-                                        transacDate: _model.transTime,
+                                          .set(createLogsRecordData(
+                                        lastRecordTime: getCurrentTimestamp,
+                                        noOfFields: _model.looooop,
                                       ));
+                                      await showDialog(
+                                        context: context,
+                                        builder: (alertDialogContext) {
+                                          return AlertDialog(
+                                            title: Text('Success'),
+                                            content: Text(
+                                                '${_model.looooop?.toString()} entered into the Database'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    alertDialogContext),
+                                                child: Text('Ok'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
                                       setState(() {
-                                        _model.looooop = _model.looooop! + 1;
+                                        _model.looooop = 0;
                                       });
                                     }
-
-                                    await LogsRecord.createDoc(
-                                            currentUserReference!)
-                                        .set(createLogsRecordData(
-                                      lastRecordTime: getCurrentTimestamp,
-                                      noOfFields: _model.looooop,
-                                    ));
-                                    await showDialog(
-                                      context: context,
-                                      builder: (alertDialogContext) {
-                                        return AlertDialog(
-                                          title: Text('Success'),
-                                          content: Text(
-                                              '${_model.looooop?.toString()} entered into the Database'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  alertDialogContext),
-                                              child: Text('Ok'),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                    setState(() {
-                                      _model.looooop = 0;
-                                    });
                                   } else {
                                     await showDialog(
                                       context: context,
