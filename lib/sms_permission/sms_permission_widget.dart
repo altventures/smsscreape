@@ -38,6 +38,8 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
@@ -149,6 +151,9 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                             setState(() {
                               _model.looooop = 0;
                             });
+                            setState(() {
+                              FFAppState().userId = currentUserReference!.id;
+                            });
 
                             context.pushNamed('permission_successful');
                           } else {
@@ -223,6 +228,13 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                         ),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
+                    ),
+                    Text(
+                      valueOrDefault<String>(
+                        currentUserReference?.id,
+                        '444',
+                      ),
+                      style: FlutterFlowTheme.of(context).bodyMedium,
                     ),
                   ],
                 );

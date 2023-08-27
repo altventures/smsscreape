@@ -1,10 +1,8 @@
-import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/random_data_util.dart' as random_data;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +27,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     super.initState();
     _model = createModel(context, () => LoginModel());
 
-    _model.emailTextController ??= TextEditingController();
+    _model.inputEmailController ??= TextEditingController();
   }
 
   @override
@@ -41,6 +39,8 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
@@ -96,7 +96,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                         ),
                       ),
                       TextFormField(
-                        controller: _model.emailTextController,
+                        controller: _model.inputEmailController,
                         autofocus: true,
                         obscureText: false,
                         decoration: InputDecoration(
@@ -147,7 +147,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                               color: Color(0xFF667085),
                               fontSize: 16.0,
                             ),
-                        validator: _model.emailTextControllerValidator
+                        validator: _model.inputEmailControllerValidator
                             .asValidator(context),
                       ),
                       Padding(
@@ -155,91 +155,66 @@ class _LoginWidgetState extends State<LoginWidget> {
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                         child: FFButtonWidget(
                           onPressed: () async {
-                            GoRouter.of(context).prepareAuthEvent();
-                            if (_model.emailTextController.text !=
-                                _model.emailTextController.text) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Passwords don\'t match!',
-                                  ),
-                                ),
-                              );
-                              return;
-                            }
-
-                            final user =
-                                await authManager.createAccountWithEmail(
-                              context,
-                              _model.emailTextController.text,
-                              _model.emailTextController.text,
-                            );
-                            if (user == null) {
-                              return;
-                            }
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'acc xreated',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
-                            );
-
-                            await currentUserReference!
-                                .update(createUsersRecordData(
-                              otp: random_data.randomInteger(1000, 9999),
-                            ));
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'otp generated',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
-                            );
+                            var _shouldSetState = false;
+                            setState(() {
+                              _model.otpGen =
+                                  random_data.randomInteger(1000, 9999);
+                            });
                             await launchUrl(Uri(
                                 scheme: 'mailto',
-                                path: _model.emailTextController.text,
+                                path: _model.inputEmailController.text,
                                 query: {
-                                  'subject': 'OTP CODE',
+                                  'subject': 'Verification Code',
                                   'body':
-                                      'Hello, Here is your otp: ${valueOrDefault(currentUserDocument?.otp, 0).toString()}',
+                                      'Here is your verification code${_model.otpGen.toString()}',
                                 }
                                     .entries
                                     .map((MapEntry<String, String> e) =>
                                         '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
                                     .join('&')));
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'email sent',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
+                            await showDialog(
+                              context: context,
+                              builder: (alertDialogContext) {
+                                return AlertDialog(
+                                  title: Text('Here is your otp'),
+                                  content: Text(_model.otpGen.toString()),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(alertDialogContext),
+                                      child: Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            _model.emailChecked =
+                                await actions.checkIfEmailExists(
+                              _model.inputEmailController.text,
+                            );
+                            _shouldSetState = true;
+                            if (!_model.emailChecked!) {
+                              context.pushNamed('verificationSignup');
+
+                              if (_shouldSetState) setState(() {});
+                              return;
+                            }
+
+                            context.pushNamed(
+                              'verificationLogin',
+                              queryParameters: {
+                                'email': serializeParam(
+                                  _model.inputEmailController.text,
+                                  ParamType.String,
                                 ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
+                                'otp': serializeParam(
+                                  _model.otpGen,
+                                  ParamType.int,
+                                ),
+                              }.withoutNulls,
                             );
 
-                            context.pushNamedAuth(
-                                'verification', context.mounted);
+                            if (_shouldSetState) setState(() {});
                           },
                           text: 'Continue',
                           options: FFButtonOptions(

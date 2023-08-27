@@ -1,34 +1,38 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/random_data_util.dart' as random_data;
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'verification_model.dart';
-export 'verification_model.dart';
+import 'verification_signup_model.dart';
+export 'verification_signup_model.dart';
 
-class VerificationWidget extends StatefulWidget {
-  const VerificationWidget({Key? key}) : super(key: key);
+class VerificationSignupWidget extends StatefulWidget {
+  const VerificationSignupWidget({
+    Key? key,
+    this.email,
+    this.otp,
+  }) : super(key: key);
+
+  final String? email;
+  final int? otp;
 
   @override
-  _VerificationWidgetState createState() => _VerificationWidgetState();
+  _VerificationSignupWidgetState createState() =>
+      _VerificationSignupWidgetState();
 }
 
-class _VerificationWidgetState extends State<VerificationWidget> {
-  late VerificationModel _model;
+class _VerificationSignupWidgetState extends State<VerificationSignupWidget> {
+  late VerificationSignupModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => VerificationModel());
+    _model = createModel(context, () => VerificationSignupModel());
   }
 
   @override
@@ -40,6 +44,8 @@ class _VerificationWidgetState extends State<VerificationWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
@@ -127,57 +133,28 @@ class _VerificationWidgetState extends State<VerificationWidget> {
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 10.0, 0.0, 0.0),
-                              child: InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  await currentUserReference!
-                                      .update(createUsersRecordData(
-                                    otp: random_data.randomInteger(1000, 9999),
-                                  ));
-                                  await launchUrl(Uri(
-                                      scheme: 'mailto',
-                                      path: currentUserEmail,
-                                      query: {
-                                        'subject': 'Verification Code',
-                                        'body':
-                                            'Here is your otp: ${valueOrDefault(currentUserDocument?.otp, 0).toString()}',
-                                      }
-                                          .entries
-                                          .map((MapEntry<String, String> e) =>
-                                              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-                                          .join('&')));
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'OTP resend done',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
+                              child: Text(
+                                'Resend Code',
+                                textAlign: TextAlign.center,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: Color(0xFF6941C6),
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                  );
-                                },
-                                child: Text(
-                                  'Resend Code',
-                                  textAlign: TextAlign.center,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Inter',
-                                        color: Color(0xFF6941C6),
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                ),
                               ),
+                            ),
+                            Text(
+                              '${widget.email}${widget.otp.toString()}',
+                              textAlign: TextAlign.center,
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: 'Inter',
+                                    fontSize: 18.0,
+                                  ),
                             ),
                           ],
                         ),
@@ -187,26 +164,49 @@ class _VerificationWidgetState extends State<VerificationWidget> {
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    if (valueOrDefault(currentUserDocument?.otp, 0)
-                            .toString() ==
+                    if (widget.otp.toString() ==
                         _model.pinCodeController!.text) {
-                      context.pushNamed('sms_permission');
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Your otp is incorrect',
-                            style: GoogleFonts.getFont(
-                              'Inter',
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18.0,
+                      GoRouter.of(context).prepareAuthEvent();
+                      if (widget.email! != widget.email!) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Passwords don\'t match!',
                             ),
                           ),
-                          duration: Duration(milliseconds: 4000),
-                          backgroundColor: Color(0xFFFF0005),
-                        ),
+                        );
+                        return;
+                      }
+
+                      final user = await authManager.createAccountWithEmail(
+                        context,
+                        widget.email!,
+                        widget.email!,
                       );
+                      if (user == null) {
+                        return;
+                      }
+
+                      context.pushNamedAuth('registration', context.mounted);
+
+                      return;
+                    } else {
+                      await showDialog(
+                        context: context,
+                        builder: (alertDialogContext) {
+                          return AlertDialog(
+                            title: Text('OTP not correct'),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(alertDialogContext),
+                                child: Text('Ok'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
                     }
                   },
                   text: 'Continue',

@@ -97,9 +97,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => LoginWidget(),
         ),
         FFRoute(
-          name: 'verification',
-          path: '/verification',
-          builder: (context, params) => VerificationWidget(),
+          name: 'verificationLogin',
+          path: '/verificationLogin',
+          builder: (context, params) => VerificationLoginWidget(
+            email: params.getParam('email', ParamType.String),
+            otp: params.getParam('otp', ParamType.int),
+          ),
         ),
         FFRoute(
           name: 'registration',
@@ -120,6 +123,24 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'settings',
           path: '/settings',
           builder: (context, params) => SettingsWidget(),
+        ),
+        FFRoute(
+          name: 'admin_login',
+          path: '/adminLogin',
+          builder: (context, params) => AdminLoginWidget(),
+        ),
+        FFRoute(
+          name: 'admin_transac_hist',
+          path: '/adminTransacHist',
+          builder: (context, params) => AdminTransacHistWidget(),
+        ),
+        FFRoute(
+          name: 'verificationSignup',
+          path: '/verificationSignup',
+          builder: (context, params) => VerificationSignupWidget(
+            email: params.getParam('email', ParamType.String),
+            otp: params.getParam('otp', ParamType.int),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
