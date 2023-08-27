@@ -51,9 +51,13 @@ Future<List<dynamic>> readMessages(LogsRecord? lastLog) async {
   }).toList();
 
   if (lastLog != null) {
+    // Convert the lastRecordTime to a Unix timestamp in seconds
+    final lastRecordTime =
+        (lastLog.lastRecordTime!.millisecondsSinceEpoch / 1000).round();
+
     // Filter the messages to only include new messages
     messagesJson = messagesJson.where((message) {
-      return message['unixTime'] > lastLog.lastRecordTime;
+      return message['unixTime'] > lastRecordTime;
     }).toList();
   }
 

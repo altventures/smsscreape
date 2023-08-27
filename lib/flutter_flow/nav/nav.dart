@@ -78,13 +78,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? SmsPermissionWidget() : LoginWidget(),
+          appStateNotifier.loggedIn ? AdminTransacHistWidget() : LoginWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) =>
-              appStateNotifier.loggedIn ? SmsPermissionWidget() : LoginWidget(),
+          builder: (context, _) => appStateNotifier.loggedIn
+              ? AdminTransacHistWidget()
+              : LoginWidget(),
         ),
         FFRoute(
           name: 'Home',

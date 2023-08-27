@@ -71,6 +71,11 @@ class UsersRecord extends FirestoreRecord {
   String get emailStatus => _emailStatus ?? '';
   bool hasEmailStatus() => _emailStatus != null;
 
+  // "status" field.
+  String? _status;
+  String get status => _status ?? '';
+  bool hasStatus() => _status != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -83,6 +88,7 @@ class UsersRecord extends FirestoreRecord {
     _smsAccess = snapshotData['sms_access'] as bool?;
     _otp = castToType<int>(snapshotData['otp']);
     _emailStatus = snapshotData['email_status'] as String?;
+    _status = snapshotData['status'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -130,6 +136,7 @@ Map<String, dynamic> createUsersRecordData({
   bool? smsAccess,
   int? otp,
   String? emailStatus,
+  String? status,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -144,6 +151,7 @@ Map<String, dynamic> createUsersRecordData({
       'sms_access': smsAccess,
       'otp': otp,
       'email_status': emailStatus,
+      'status': status,
     }.withoutNulls,
   );
 
@@ -165,7 +173,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.state == e2?.state &&
         e1?.smsAccess == e2?.smsAccess &&
         e1?.otp == e2?.otp &&
-        e1?.emailStatus == e2?.emailStatus;
+        e1?.emailStatus == e2?.emailStatus &&
+        e1?.status == e2?.status;
   }
 
   @override
@@ -180,7 +189,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.state,
         e?.smsAccess,
         e?.otp,
-        e?.emailStatus
+        e?.emailStatus,
+        e?.status
       ]);
 
   @override
