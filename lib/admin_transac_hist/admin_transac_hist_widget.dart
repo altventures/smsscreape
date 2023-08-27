@@ -144,11 +144,19 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                               children: [
                                 FlutterFlowDropDown<String>(
                                   controller:
-                                      _model.dropDownValueController1 ??=
-                                          FormFieldController<String>(null),
-                                  options: ['Active', 'Inactive'],
-                                  onChanged: (val) => setState(
-                                      () => _model.dropDownValue1 = val),
+                                      _model.dropDownStatusValueController ??=
+                                          FormFieldController<String>(
+                                    _model.dropDownStatusValue ??= 'All Status',
+                                  ),
+                                  options: ['Active', 'Inactive', 'All Status'],
+                                  onChanged: (val) async {
+                                    setState(
+                                        () => _model.dropDownStatusValue = val);
+                                    setState(() {
+                                      _model.statusType =
+                                          _model.dropDownStatusValue!;
+                                    });
+                                  },
                                   width: 300.0,
                                   height: 50.0,
                                   textStyle:
@@ -174,12 +182,11 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                                   isMultiSelect: false,
                                 ),
                                 FlutterFlowDropDown<String>(
-                                  controller:
-                                      _model.dropDownValueController2 ??=
-                                          FormFieldController<String>(null),
+                                  controller: _model.dropDownValueController ??=
+                                      FormFieldController<String>(null),
                                   options: ['Option 1'],
                                   onChanged: (val) => setState(
-                                      () => _model.dropDownValue2 = val),
+                                      () => _model.dropDownValue = val),
                                   width: 300.0,
                                   height: 50.0,
                                   textStyle:
@@ -435,7 +442,11 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                               ],
                             ),
                             StreamBuilder<List<UsersRecord>>(
-                              stream: queryUsersRecord(),
+                              stream: queryUsersRecord(
+                                queryBuilder: (usersRecord) =>
+                                    usersRecord.where('status',
+                                        isEqualTo: _model.statusType),
+                              ),
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.
                                 if (!snapshot.hasData) {
