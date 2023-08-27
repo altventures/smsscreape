@@ -69,7 +69,18 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                           EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
-                        children: [],
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: 100.0,
+                              height: 100.0,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Expanded(

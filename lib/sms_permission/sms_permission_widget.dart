@@ -151,9 +151,6 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                             setState(() {
                               _model.looooop = 0;
                             });
-                            setState(() {
-                              FFAppState().userId = currentUserReference!.id;
-                            });
 
                             context.pushNamed('permission_successful');
                           } else {
