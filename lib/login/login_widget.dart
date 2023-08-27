@@ -194,7 +194,19 @@ class _LoginWidgetState extends State<LoginWidget> {
                             );
                             _shouldSetState = true;
                             if (!_model.emailChecked!) {
-                              context.pushNamed('verificationSignup');
+                              context.pushNamed(
+                                'verificationSignup',
+                                queryParameters: {
+                                  'email': serializeParam(
+                                    _model.inputEmailController.text,
+                                    ParamType.String,
+                                  ),
+                                  'otp': serializeParam(
+                                    _model.otpGen,
+                                    ParamType.int,
+                                  ),
+                                }.withoutNulls,
+                              );
 
                               if (_shouldSetState) setState(() {});
                               return;

@@ -1,5 +1,7 @@
+import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/form_field_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -64,24 +66,19 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              width: 100.0,
-                              height: 100.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                              ),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 50.0,
+                            height: 100.0,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF2FDFF),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     Expanded(
                       child: Padding(
@@ -90,7 +87,86 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [],
+                          children: [
+                            Text(
+                              'Transaction History',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFF7B61FF),
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                FlutterFlowDropDown<String>(
+                                  controller:
+                                      _model.dropDownValueController1 ??=
+                                          FormFieldController<String>(null),
+                                  options: ['Option 1'],
+                                  onChanged: (val) => setState(
+                                      () => _model.dropDownValue1 = val),
+                                  width: 300.0,
+                                  height: 50.0,
+                                  textStyle:
+                                      FlutterFlowTheme.of(context).bodyMedium,
+                                  hintText: 'Please select...',
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    size: 24.0,
+                                  ),
+                                  fillColor: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  elevation: 2.0,
+                                  borderColor:
+                                      FlutterFlowTheme.of(context).alternate,
+                                  borderWidth: 2.0,
+                                  borderRadius: 8.0,
+                                  margin: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 4.0, 16.0, 4.0),
+                                  hidesUnderline: true,
+                                  isSearchable: false,
+                                  isMultiSelect: false,
+                                ),
+                                FlutterFlowDropDown<String>(
+                                  controller:
+                                      _model.dropDownValueController2 ??=
+                                          FormFieldController<String>(null),
+                                  options: ['Option 1'],
+                                  onChanged: (val) => setState(
+                                      () => _model.dropDownValue2 = val),
+                                  width: 300.0,
+                                  height: 50.0,
+                                  textStyle:
+                                      FlutterFlowTheme.of(context).bodyMedium,
+                                  hintText: 'Please select...',
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    size: 24.0,
+                                  ),
+                                  fillColor: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  elevation: 2.0,
+                                  borderColor:
+                                      FlutterFlowTheme.of(context).alternate,
+                                  borderWidth: 2.0,
+                                  borderRadius: 8.0,
+                                  margin: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 4.0, 16.0, 4.0),
+                                  hidesUnderline: true,
+                                  isSearchable: false,
+                                  isMultiSelect: false,
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
