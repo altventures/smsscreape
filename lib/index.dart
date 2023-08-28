@@ -9,7 +9,9 @@ export '/permission_successful/permission_successful_widget.dart'
     show PermissionSuccessfulWidget;
 export '/settings/settings_widget.dart' show SettingsWidget;
 export '/admin_login/admin_login_widget.dart' show AdminLoginWidget;
-export '/admin_transac_hist/admin_transac_hist_widget.dart'
-    show AdminTransacHistWidget;
+export '/admin_user_manage/admin_user_manage_widget.dart'
+    show AdminUserManageWidget;
 export '/verification_signup/verification_signup_widget.dart'
     show VerificationSignupWidget;
+export '/admin_transac_hist/admin_transac_hist_widget.dart'
+    show AdminTransacHistWidget;

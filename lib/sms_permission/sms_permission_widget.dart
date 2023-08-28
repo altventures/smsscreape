@@ -27,6 +27,8 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => SmsPermissionModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

@@ -23,6 +23,8 @@ Future<bool> readSmsPermission() async {
     if (permission.isGranted) {
       return true;
     }
+    openAppSettings();
+
     return false;
   }
   // Add your function code here!

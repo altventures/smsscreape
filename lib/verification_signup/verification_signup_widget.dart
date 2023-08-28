@@ -33,6 +33,8 @@ class _VerificationSignupWidgetState extends State<VerificationSignupWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => VerificationSignupModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

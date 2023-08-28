@@ -28,8 +28,6 @@ Future<List<dynamic>> readMessages(LogsRecord? lastLog) async {
         body!.contains('is successful.') == true;
   }).toList();
 
-  print(transactionMessages[0].body);
-
   List<Map<String, dynamic>> messagesJson = transactionMessages.map((message) {
     // Extract the transaction amount from the message body
     final amountRegex = RegExp(r'PHP ([\d\.,]+)');

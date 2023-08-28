@@ -78,13 +78,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? SmsPermissionWidget() : LoginWidget(),
+          appStateNotifier.loggedIn ? AdminUserManageWidget() : LoginWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) =>
-              appStateNotifier.loggedIn ? SmsPermissionWidget() : LoginWidget(),
+          builder: (context, _) => appStateNotifier.loggedIn
+              ? AdminUserManageWidget()
+              : LoginWidget(),
         ),
         FFRoute(
           name: 'Home',
@@ -107,6 +108,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'registration',
           path: '/registration',
+          requireAuth: true,
           builder: (context, params) => RegistrationWidget(),
         ),
         FFRoute(
@@ -130,9 +132,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => AdminLoginWidget(),
         ),
         FFRoute(
-          name: 'admin_transac_hist',
-          path: '/adminTransacHist',
-          builder: (context, params) => AdminTransacHistWidget(),
+          name: 'admin_user_manage',
+          path: '/adminUserManage',
+          builder: (context, params) => AdminUserManageWidget(),
         ),
         FFRoute(
           name: 'verificationSignup',
@@ -140,6 +142,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => VerificationSignupWidget(
             email: params.getParam('email', ParamType.String),
             otp: params.getParam('otp', ParamType.int),
+          ),
+        ),
+        FFRoute(
+          name: 'admin_transac_hist',
+          path: '/adminTransacHist',
+          builder: (context, params) => AdminTransacHistWidget(
+            userid: params.getParam(
+                'userid', ParamType.DocumentReference, false, ['users']),
           ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),

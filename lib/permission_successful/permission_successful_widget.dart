@@ -25,6 +25,8 @@ class _PermissionSuccessfulWidgetState
   void initState() {
     super.initState();
     _model = createModel(context, () => PermissionSuccessfulModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

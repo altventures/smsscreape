@@ -28,6 +28,8 @@ class _HomeWidgetState extends State<HomeWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomeModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -83,8 +85,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                         color: FlutterFlowTheme.of(context).primaryText,
                         size: 30.0,
                       ),
-                      onPressed: () {
-                        print('IconButton pressed ...');
+                      onPressed: () async {
+                        context.pushNamed('settings');
                       },
                     ),
                   ],

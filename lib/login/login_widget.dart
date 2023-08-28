@@ -6,7 +6,6 @@ import '/flutter_flow/random_data_util.dart' as random_data;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'login_model.dart';
 export 'login_model.dart';
 
@@ -28,6 +27,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     _model = createModel(context, () => LoginModel());
 
     _model.inputEmailController ??= TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -160,18 +160,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                               _model.otpGen =
                                   random_data.randomInteger(1000, 9999);
                             });
-                            await launchUrl(Uri(
-                                scheme: 'mailto',
-                                path: _model.inputEmailController.text,
-                                query: {
-                                  'subject': 'Verification Code',
-                                  'body':
-                                      'Here is your verification code${_model.otpGen.toString()}',
-                                }
-                                    .entries
-                                    .map((MapEntry<String, String> e) =>
-                                        '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-                                    .join('&')));
                             await showDialog(
                               context: context,
                               builder: (alertDialogContext) {
@@ -255,14 +243,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                     ],
                   ),
                 ),
-              ),
-              Text(
-                'adullahmustafaf@040gmail.com',
-                style: FlutterFlowTheme.of(context).bodyMedium,
-              ),
-              Text(
-                'adullahmustafaf@040gmail.com',
-                style: FlutterFlowTheme.of(context).bodyMedium,
               ),
             ],
           ),

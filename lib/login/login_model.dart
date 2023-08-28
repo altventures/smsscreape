@@ -6,7 +6,6 @@ import '/flutter_flow/random_data_util.dart' as random_data;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoginModel extends FlutterFlowModel {
   ///  Local state fields for this page.

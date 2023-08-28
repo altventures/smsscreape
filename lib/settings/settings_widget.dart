@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -27,7 +28,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     super.initState();
     _model = createModel(context, () => SettingsModel());
 
-    _model.textController ??= TextEditingController();
+    _model.textController ??=
+        TextEditingController(text: currentUserDisplayName);
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -67,8 +70,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         color: FlutterFlowTheme.of(context).primaryText,
                         size: 20.0,
                       ),
-                      onPressed: () {
-                        print('IconButton pressed ...');
+                      onPressed: () async {
+                        context.safePop();
                       },
                     ),
                     Padding(
@@ -156,151 +159,180 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                        child: TextFormField(
-                          controller: _model.textController,
-                          autofocus: true,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: 'Display Name',
-                            labelStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFF667085),
-                                  fontSize: 16.0,
+                        child: AuthUserStreamWidget(
+                          builder: (context) => TextFormField(
+                            controller: _model.textController,
+                            autofocus: true,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              labelText: 'Display Name',
+                              labelStyle: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF667085),
+                                    fontSize: 16.0,
+                                  ),
+                              hintStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF667085),
+                                    fontSize: 16.0,
+                                  ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFFD0D5DD),
+                                  width: 2.0,
                                 ),
-                            hintStyle: FlutterFlowTheme.of(context)
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).error,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).error,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                            ),
+                            style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
                                   fontFamily: 'Inter',
                                   color: Color(0xFF667085),
                                   fontSize: 16.0,
                                 ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xFFD0D5DD),
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
+                            validator: _model.textControllerValidator
+                                .asValidator(context),
                           ),
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Inter',
-                                    color: Color(0xFF667085),
-                                    fontSize: 16.0,
-                                  ),
-                          validator: _model.textControllerValidator
-                              .asValidator(context),
                         ),
                       ),
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                        child: FlutterFlowDropDown<String>(
-                          controller: _model.dropDownValueController2 ??=
-                              FormFieldController<String>(null),
-                          options: ['Option 1'],
-                          onChanged: (val) =>
-                              setState(() => _model.dropDownValue2 = val),
-                          width: 300.0,
-                          height: 50.0,
-                          textStyle:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Inter',
-                                    color: Color(0xFF667085),
-                                    fontSize: 16.0,
-                                  ),
-                          hintText: 'City',
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            size: 24.0,
+                        child: AuthUserStreamWidget(
+                          builder: (context) => FlutterFlowDropDown<String>(
+                            controller: _model.dropDownValueController2 ??=
+                                FormFieldController<String>(
+                              _model.dropDownValue2 ??=
+                                  valueOrDefault(currentUserDocument?.city, ''),
+                            ),
+                            options: ['Option 1'],
+                            onChanged: (val) =>
+                                setState(() => _model.dropDownValue2 = val),
+                            width: 300.0,
+                            height: 50.0,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'Inter',
+                                  color: Color(0xFF667085),
+                                  fontSize: 16.0,
+                                ),
+                            hintText: 'City',
+                            icon: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              size: 24.0,
+                            ),
+                            fillColor: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            elevation: 2.0,
+                            borderColor: FlutterFlowTheme.of(context).alternate,
+                            borderWidth: 2.0,
+                            borderRadius: 8.0,
+                            margin: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 4.0, 16.0, 4.0),
+                            hidesUnderline: true,
+                            isSearchable: false,
+                            isMultiSelect: false,
                           ),
-                          fillColor:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          elevation: 2.0,
-                          borderColor: FlutterFlowTheme.of(context).alternate,
-                          borderWidth: 2.0,
-                          borderRadius: 8.0,
-                          margin: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 4.0, 16.0, 4.0),
-                          hidesUnderline: true,
-                          isSearchable: false,
-                          isMultiSelect: false,
                         ),
                       ),
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                        child: FlutterFlowDropDown<String>(
-                          controller: _model.dropDownValueController3 ??=
-                              FormFieldController<String>(null),
-                          options: ['Option 1'],
-                          onChanged: (val) =>
-                              setState(() => _model.dropDownValue3 = val),
-                          width: 300.0,
-                          height: 50.0,
-                          textStyle:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Inter',
-                                    color: Color(0xFF667085),
-                                    fontSize: 16.0,
-                                  ),
-                          hintText: 'State',
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            size: 24.0,
+                        child: AuthUserStreamWidget(
+                          builder: (context) => FlutterFlowDropDown<String>(
+                            controller: _model.dropDownValueController3 ??=
+                                FormFieldController<String>(
+                              _model.dropDownValue3 ??= valueOrDefault(
+                                  currentUserDocument?.state, ''),
+                            ),
+                            options: ['Option 1'],
+                            onChanged: (val) =>
+                                setState(() => _model.dropDownValue3 = val),
+                            width: 300.0,
+                            height: 50.0,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'Inter',
+                                  color: Color(0xFF667085),
+                                  fontSize: 16.0,
+                                ),
+                            hintText: 'State',
+                            icon: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              size: 24.0,
+                            ),
+                            fillColor: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            elevation: 2.0,
+                            borderColor: FlutterFlowTheme.of(context).alternate,
+                            borderWidth: 2.0,
+                            borderRadius: 8.0,
+                            margin: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 4.0, 16.0, 4.0),
+                            hidesUnderline: true,
+                            isSearchable: false,
+                            isMultiSelect: false,
                           ),
-                          fillColor:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          elevation: 2.0,
-                          borderColor: FlutterFlowTheme.of(context).alternate,
-                          borderWidth: 2.0,
-                          borderRadius: 8.0,
-                          margin: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 4.0, 16.0, 4.0),
-                          hidesUnderline: true,
-                          isSearchable: false,
-                          isMultiSelect: false,
                         ),
                       ),
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                        child: Text(
-                          'Logout',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Inter',
-                                    color: Color(0xFF7F56D9),
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            GoRouter.of(context).prepareAuthEvent();
+                            await authManager.signOut();
+                            GoRouter.of(context).clearRedirectLocation();
+
+                            context.pushNamedAuth('Login', context.mounted);
+                          },
+                          child: Text(
+                            'Logout',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'Inter',
+                                  color: Color(0xFF7F56D9),
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
                         ),
                       ),
                       Padding(

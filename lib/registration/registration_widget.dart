@@ -1,8 +1,11 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +29,8 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
     super.initState();
     _model = createModel(context, () => RegistrationModel());
 
-    _model.textController1 ??= TextEditingController();
-    _model.textController2 ??= TextEditingController();
+    _model.inputdisplayNameController ??= TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -80,11 +83,11 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 20.0, 0.0, 0.0),
                           child: TextFormField(
-                            controller: _model.textController1,
+                            controller: _model.inputdisplayNameController,
                             autofocus: true,
                             obscureText: false,
                             decoration: InputDecoration(
-                              labelText: 'First Name',
+                              labelText: 'Display Name',
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -130,65 +133,8 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                                   color: Color(0xFF667085),
                                   fontSize: 16.0,
                                 ),
-                            validator: _model.textController1Validator
-                                .asValidator(context),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 20.0, 0.0, 0.0),
-                          child: TextFormField(
-                            controller: _model.textController2,
-                            autofocus: true,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              labelText: 'Last Name',
-                              labelStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    color: Color(0xFF667085),
-                                    fontSize: 16.0,
-                                  ),
-                              hintStyle:
-                                  FlutterFlowTheme.of(context).labelMedium,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFD0D5DD),
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFF667085),
-                                  fontSize: 16.0,
-                                ),
-                            validator: _model.textController2Validator
+                            validator: _model
+                                .inputdisplayNameControllerValidator
                                 .asValidator(context),
                           ),
                         ),
@@ -196,11 +142,11 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 20.0, 0.0, 0.0),
                           child: FlutterFlowDropDown<String>(
-                            controller: _model.dropDownValueController1 ??=
+                            controller: _model.dropDownCityValueController ??=
                                 FormFieldController<String>(null),
                             options: ['Option 1'],
                             onChanged: (val) =>
-                                setState(() => _model.dropDownValue1 = val),
+                                setState(() => _model.dropDownCityValue = val),
                             height: 50.0,
                             textStyle: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -232,11 +178,11 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 20.0, 0.0, 0.0),
                           child: FlutterFlowDropDown<String>(
-                            controller: _model.dropDownValueController2 ??=
+                            controller: _model.dropDownStateValueController ??=
                                 FormFieldController<String>(null),
                             options: ['Option 1'],
                             onChanged: (val) =>
-                                setState(() => _model.dropDownValue2 = val),
+                                setState(() => _model.dropDownStateValue = val),
                             height: 50.0,
                             textStyle: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -274,8 +220,14 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                     color: FlutterFlowTheme.of(context).secondaryBackground,
                   ),
                   child: FFButtonWidget(
-                    onPressed: () {
-                      print('Button pressed ...');
+                    onPressed: () async {
+                      await currentUserReference!.update(createUsersRecordData(
+                        displayName: _model.inputdisplayNameController.text,
+                        city: _model.dropDownCityValue,
+                        state: _model.dropDownStateValue,
+                      ));
+
+                      context.pushNamed('sms_permission');
                     },
                     text: 'Continue',
                     options: FFButtonOptions(
