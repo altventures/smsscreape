@@ -131,9 +131,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => AdminLoginWidget(),
         ),
         FFRoute(
-          name: 'admin_user_manage',
-          path: '/adminUserManage',
-          builder: (context, params) => AdminUserManageWidget(),
+          name: 'adminHome',
+          path: '/adminHome',
+          builder: (context, params) => AdminHomeWidget(),
         ),
         FFRoute(
           name: 'verificationSignup',
@@ -144,9 +144,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
-          name: 'admin_transac_hist',
-          path: '/adminTransacHist',
-          builder: (context, params) => AdminTransacHistWidget(
+          name: 'user_transac_hist',
+          path: '/userTransacHist',
+          builder: (context, params) => UserTransacHistWidget(
             userid: params.getParam(
                 'userid', ParamType.DocumentReference, false, ['users']),
           ),

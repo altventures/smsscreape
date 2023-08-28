@@ -4,34 +4,28 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'admin_transac_hist_model.dart';
-export 'admin_transac_hist_model.dart';
+import 'admin_home_model.dart';
+export 'admin_home_model.dart';
 
-class AdminTransacHistWidget extends StatefulWidget {
-  const AdminTransacHistWidget({
-    Key? key,
-    required this.userid,
-  }) : super(key: key);
-
-  final DocumentReference? userid;
+class AdminHomeWidget extends StatefulWidget {
+  const AdminHomeWidget({Key? key}) : super(key: key);
 
   @override
-  _AdminTransacHistWidgetState createState() => _AdminTransacHistWidgetState();
+  _AdminHomeWidgetState createState() => _AdminHomeWidgetState();
 }
 
-class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
-  late AdminTransacHistModel _model;
+class _AdminHomeWidgetState extends State<AdminHomeWidget> {
+  late AdminHomeModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => AdminTransacHistModel());
+    _model = createModel(context, () => AdminHomeModel());
 
     _model.textController ??= TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
@@ -108,7 +102,7 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Transaction History',
+                                      'User Management',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -416,7 +410,7 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
-                                            'Vendor',
+                                            'Name',
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -425,7 +419,7 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                                                 ),
                                           ),
                                           Text(
-                                            'Amount',
+                                            'City',
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -434,7 +428,7 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                                                 ),
                                           ),
                                           Text(
-                                            'Bank',
+                                            'State',
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -443,7 +437,7 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                                                 ),
                                           ),
                                           Text(
-                                            'Timestamp',
+                                            'Last Activity',
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
@@ -460,15 +454,22 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                           ),
+                                          Text(
+                                            'Type',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'Poppins',
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                          ),
                                         ],
                                       ),
                                     ),
                                   ],
                                 ),
-                                StreamBuilder<List<TransactionsRecord>>(
-                                  stream: queryTransactionsRecord(
-                                    parent: widget.userid,
-                                  ),
+                                StreamBuilder<List<UsersRecord>>(
+                                  stream: queryUsersRecord(),
                                   builder: (context, snapshot) {
                                     // Customize what your widget looks like when it's loading.
                                     if (!snapshot.hasData) {
@@ -486,155 +487,184 @@ class _AdminTransacHistWidgetState extends State<AdminTransacHistWidget> {
                                         ),
                                       );
                                     }
-                                    List<TransactionsRecord>
-                                        listViewTransactionsRecordList =
+                                    List<UsersRecord> listViewUsersRecordList =
                                         snapshot.data!;
                                     return ListView.builder(
                                       padding: EdgeInsets.zero,
                                       shrinkWrap: true,
                                       scrollDirection: Axis.vertical,
-                                      itemCount:
-                                          listViewTransactionsRecordList.length,
+                                      itemCount: listViewUsersRecordList.length,
                                       itemBuilder: (context, listViewIndex) {
-                                        final listViewTransactionsRecord =
-                                            listViewTransactionsRecordList[
+                                        final listViewUsersRecord =
+                                            listViewUsersRecordList[
                                                 listViewIndex];
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Theme(
-                                              data: ThemeData(
-                                                checkboxTheme:
-                                                    CheckboxThemeData(
-                                                  visualDensity:
-                                                      VisualDensity.standard,
-                                                  materialTapTargetSize:
-                                                      MaterialTapTargetSize
-                                                          .padded,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4.0),
-                                                  ),
+                                        return InkWell(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: () async {
+                                            context.pushNamed(
+                                              'user_transac_hist',
+                                              queryParameters: {
+                                                'userid': serializeParam(
+                                                  listViewUsersRecord.reference,
+                                                  ParamType.DocumentReference,
                                                 ),
-                                                unselectedWidgetColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                              ),
-                                              child: Checkbox(
-                                                value: _model.checkboxValueMap2[
-                                                        listViewTransactionsRecord] ??=
-                                                    false,
-                                                onChanged: (newValue) async {
-                                                  setState(() => _model
-                                                              .checkboxValueMap2[
-                                                          listViewTransactionsRecord] =
-                                                      newValue!);
-                                                },
-                                                activeColor: Color(0xFF01819D),
-                                                checkColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .info,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  Text(
-                                                    dateTimeFormat(
-                                                        'd/M/y',
-                                                        listViewTransactionsRecord
-                                                            .transacDate!),
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                  ),
-                                                  Text(
-                                                    listViewTransactionsRecord
-                                                        .amount
-                                                        .toString(),
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                  ),
-                                                  Text(
-                                                    listViewTransactionsRecord
-                                                        .transacNote,
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                  ),
-                                                  Text(
-                                                    'Last Activity',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                  ),
-                                                  Container(
-                                                    width: 70.0,
-                                                    height: 22.0,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          listViewTransactionsRecord
-                                                                      .amount <=
-                                                                  0.0
-                                                              ? Color(
-                                                                  0xFFFF0000)
-                                                              : Color(
-                                                                  0xFF12B76A),
+                                              }.withoutNulls,
+                                            );
+                                          },
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Theme(
+                                                data: ThemeData(
+                                                  checkboxTheme:
+                                                      CheckboxThemeData(
+                                                    visualDensity:
+                                                        VisualDensity.standard,
+                                                    materialTapTargetSize:
+                                                        MaterialTapTargetSize
+                                                            .padded,
+                                                    shape:
+                                                        RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              24.0),
-                                                      shape: BoxShape.rectangle,
+                                                              4.0),
                                                     ),
-                                                    child: Text(
-                                                      listViewTransactionsRecord
-                                                          .amount
-                                                          .toString(),
-                                                      textAlign:
-                                                          TextAlign.center,
+                                                  ),
+                                                  unselectedWidgetColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondaryText,
+                                                ),
+                                                child: Checkbox(
+                                                  value: _model
+                                                              .checkboxValueMap2[
+                                                          listViewUsersRecord] ??=
+                                                      false,
+                                                  onChanged: (newValue) async {
+                                                    setState(() => _model
+                                                                .checkboxValueMap2[
+                                                            listViewUsersRecord] =
+                                                        newValue!);
+                                                  },
+                                                  activeColor:
+                                                      Color(0xFF01819D),
+                                                  checkColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .info,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Text(
+                                                      listViewUsersRecord.email,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
                                                           .override(
                                                             fontFamily:
                                                                 'Poppins',
-                                                            fontSize: 12.0,
                                                             fontWeight:
                                                                 FontWeight.w600,
                                                           ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    Text(
+                                                      listViewUsersRecord.city,
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                    ),
+                                                    Text(
+                                                      listViewUsersRecord.state,
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                    ),
+                                                    Text(
+                                                      'Last Activity',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                    ),
+                                                    Container(
+                                                      width: 70.0,
+                                                      height: 22.0,
+                                                      decoration: BoxDecoration(
+                                                        color: listViewUsersRecord
+                                                                    .status ==
+                                                                'Inactive'
+                                                            ? Color(0xFFFF0000)
+                                                            : Color(0xFF12B76A),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(24.0),
+                                                        shape:
+                                                            BoxShape.rectangle,
+                                                      ),
+                                                      child: Text(
+                                                        listViewUsersRecord
+                                                            .status,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              fontSize: 12.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      'Type',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         );
                                       },
                                     );

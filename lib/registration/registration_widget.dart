@@ -221,13 +221,41 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                   ),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      await currentUserReference!.update(createUsersRecordData(
-                        displayName: _model.inputdisplayNameController.text,
-                        city: _model.dropDownCityValue,
-                        state: _model.dropDownStateValue,
-                      ));
+                      if ((_model.inputdisplayNameController.text == null ||
+                              _model.inputdisplayNameController.text == '') ||
+                          (_model.dropDownCityValue == null ||
+                              _model.dropDownCityValue == '') ||
+                          (_model.dropDownStateValue == null ||
+                              _model.dropDownStateValue == '')) {
+                        await currentUserReference!
+                            .update(createUsersRecordData(
+                          displayName: _model.inputdisplayNameController.text,
+                          city: _model.dropDownCityValue,
+                          state: _model.dropDownStateValue,
+                        ));
 
-                      context.pushNamed('sms_permission');
+                        context.pushNamed('Home');
+
+                        return;
+                      } else {
+                        await showDialog(
+                          context: context,
+                          builder: (alertDialogContext) {
+                            return AlertDialog(
+                              title: Text('Error'),
+                              content: Text('Please fill all fields'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(alertDialogContext),
+                                  child: Text('Ok'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        return;
+                      }
                     },
                     text: 'Continue',
                     options: FFButtonOptions(

@@ -193,7 +193,7 @@ class _VerificationSignupWidgetState extends State<VerificationSignupWidget> {
                         FFAppState().userId = currentUserReference!.id;
                       });
 
-                      context.pushNamedAuth('registration', context.mounted);
+                      context.pushNamedAuth('sms_permission', context.mounted);
 
                       return;
                     } else {

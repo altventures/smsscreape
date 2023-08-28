@@ -1,9 +1,11 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -105,11 +107,25 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                     ),
                     FlutterFlowDropDown<String>(
-                      controller: _model.dropDownValueController1 ??=
+                      controller: _model.dropDownScrappingValueController ??=
                           FormFieldController<String>(null),
                       options: ['Option 1'],
-                      onChanged: (val) =>
-                          setState(() => _model.dropDownValue1 = val),
+                      onChanged: (val) async {
+                        setState(() => _model.dropDownScrappingValue = val);
+                        if (_model.dropDownScrappingValue == 'Inactive') {
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            smsAccess: false,
+                          ));
+                          return;
+                        } else {
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            smsAccess: true,
+                          ));
+                          return;
+                        }
+                      },
                       width: 90.0,
                       height: 20.0,
                       textStyle:
@@ -228,14 +244,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                         child: AuthUserStreamWidget(
                           builder: (context) => FlutterFlowDropDown<String>(
-                            controller: _model.dropDownValueController2 ??=
+                            controller: _model.dropDownCityValueController ??=
                                 FormFieldController<String>(
-                              _model.dropDownValue2 ??=
+                              _model.dropDownCityValue ??=
                                   valueOrDefault(currentUserDocument?.city, ''),
                             ),
                             options: ['Option 1'],
                             onChanged: (val) =>
-                                setState(() => _model.dropDownValue2 = val),
+                                setState(() => _model.dropDownCityValue = val),
                             width: 300.0,
                             height: 50.0,
                             textStyle: FlutterFlowTheme.of(context)
@@ -270,14 +286,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                         child: AuthUserStreamWidget(
                           builder: (context) => FlutterFlowDropDown<String>(
-                            controller: _model.dropDownValueController3 ??=
+                            controller: _model.dropDownStateValueController ??=
                                 FormFieldController<String>(
-                              _model.dropDownValue3 ??= valueOrDefault(
+                              _model.dropDownStateValue ??= valueOrDefault(
                                   currentUserDocument?.state, ''),
                             ),
                             options: ['Option 1'],
                             onChanged: (val) =>
-                                setState(() => _model.dropDownValue3 = val),
+                                setState(() => _model.dropDownStateValue = val),
                             width: 300.0,
                             height: 50.0,
                             textStyle: FlutterFlowTheme.of(context)

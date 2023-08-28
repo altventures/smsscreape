@@ -86,7 +86,7 @@ class _PermissionSuccessfulWidgetState
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    context.pushNamed('Home');
+                    context.pushNamed('registration');
                   },
                   text: 'Continue',
                   options: FFButtonOptions(

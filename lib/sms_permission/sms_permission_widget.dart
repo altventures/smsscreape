@@ -100,6 +100,11 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                             _model.readMessages = await actions.readMessages(
                               columnLogsRecord,
                             );
+
+                            await currentUserReference!
+                                .update(createUsersRecordData(
+                              smsAccess: true,
+                            ));
                             if (_model.readMessages?.length == 0) {
                               context.pushNamed('permission_successful');
                             } else {

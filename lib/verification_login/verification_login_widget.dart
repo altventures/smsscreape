@@ -182,8 +182,14 @@ class _VerificationLoginWidgetState extends State<VerificationLoginWidget> {
                       setState(() {
                         FFAppState().userId = currentUserReference!.id;
                       });
-
-                      context.pushNamedAuth('Home', context.mounted);
+                      if (valueOrDefault<bool>(
+                              currentUserDocument?.smsAccess, false) ==
+                          true) {
+                        context.pushNamedAuth('Home', context.mounted);
+                      } else {
+                        context.pushNamedAuth(
+                            'sms_permission', context.mounted);
+                      }
 
                       return;
                     } else {

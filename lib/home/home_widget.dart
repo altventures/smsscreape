@@ -153,6 +153,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                                         await actions.readMessages(
                                       columnLogsRecord,
                                     );
+
+                                    await currentUserReference!
+                                        .update(createUsersRecordData(
+                                      smsAccess: true,
+                                    ));
                                     if (_model.readMessages?.length != 0) {
                                       while (_model.looooop! <
                                           _model.readMessages!.length) {
@@ -229,6 +234,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                                         );
                                       },
                                     );
+
+                                    await currentUserReference!
+                                        .update(createUsersRecordData(
+                                      smsAccess: false,
+                                    ));
                                   }
 
                                   setState(() {});
@@ -335,7 +345,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                   Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
+                                                            .fromSTEB(0.0, 8.0,
                                                                 0.0, 2.0),
                                                     child: Text(
                                                       'USD ${listViewTransactionsRecord.amount.toString()}',
