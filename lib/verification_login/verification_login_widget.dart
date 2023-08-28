@@ -183,7 +183,7 @@ class _VerificationLoginWidgetState extends State<VerificationLoginWidget> {
                         FFAppState().userId = currentUserReference!.id;
                       });
 
-                      context.pushNamedAuth('registration', context.mounted);
+                      context.pushNamedAuth('Home', context.mounted);
 
                       return;
                     } else {
