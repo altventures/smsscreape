@@ -141,22 +141,19 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                                 lastRecordTime: getCurrentTimestamp,
                                 noOfFields: _model.looooop,
                               ));
-                              await showDialog(
-                                context: context,
-                                builder: (alertDialogContext) {
-                                  return AlertDialog(
-                                    title: Text('Success'),
-                                    content: Text(
-                                        '${_model.looooop?.toString()} entered into the Database'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(alertDialogContext),
-                                        child: Text('Ok'),
-                                      ),
-                                    ],
-                                  );
-                                },
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '${_model.looooop?.toString()} Transaction inserted',
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
+                                  ),
+                                  duration: Duration(milliseconds: 1600),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
+                                ),
                               );
                               setState(() {
                                 _model.looooop = 0;
@@ -187,6 +184,7 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                         },
                         text: 'Grant Sms Access ',
                         options: FFButtonOptions(
+                          width: 180.0,
                           height: 40.0,
                           padding: EdgeInsetsDirectional.fromSTEB(
                               24.0, 0.0, 24.0, 0.0),
@@ -207,42 +205,6 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                    ),
-                    FFButtonWidget(
-                      onPressed: () async {
-                        GoRouter.of(context).prepareAuthEvent();
-                        await authManager.signOut();
-                        GoRouter.of(context).clearRedirectLocation();
-
-                        context.pushNamedAuth('Login', context.mounted);
-                      },
-                      text: 'Button',
-                      options: FFButtonOptions(
-                        height: 40.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primary,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Readex Pro',
-                                  color: Colors.white,
-                                ),
-                        elevation: 3.0,
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    Text(
-                      valueOrDefault<String>(
-                        currentUserReference?.id,
-                        '444',
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyMedium,
                     ),
                   ],
                 );

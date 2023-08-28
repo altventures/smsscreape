@@ -29,7 +29,8 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
     super.initState();
     _model = createModel(context, () => RegistrationModel());
 
-    _model.inputdisplayNameController ??= TextEditingController();
+    _model.inputdisplayNameController ??=
+        TextEditingController(text: currentUserDisplayName);
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -82,60 +83,62 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 20.0, 0.0, 0.0),
-                          child: TextFormField(
-                            controller: _model.inputdisplayNameController,
-                            autofocus: true,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              labelText: 'Display Name',
-                              labelStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
+                          child: AuthUserStreamWidget(
+                            builder: (context) => TextFormField(
+                              controller: _model.inputdisplayNameController,
+                              autofocus: true,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                labelText: 'Display Name',
+                                labelStyle: FlutterFlowTheme.of(context)
+                                    .labelMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: Color(0xFF667085),
+                                      fontSize: 16.0,
+                                    ),
+                                hintStyle:
+                                    FlutterFlowTheme.of(context).labelMedium,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFD0D5DD),
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
                                   .override(
                                     fontFamily: 'Inter',
                                     color: Color(0xFF667085),
                                     fontSize: 16.0,
                                   ),
-                              hintStyle:
-                                  FlutterFlowTheme.of(context).labelMedium,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFD0D5DD),
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                              validator: _model
+                                  .inputdisplayNameControllerValidator
+                                  .asValidator(context),
                             ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFF667085),
-                                  fontSize: 16.0,
-                                ),
-                            validator: _model
-                                .inputdisplayNameControllerValidator
-                                .asValidator(context),
                           ),
                         ),
                         Padding(
@@ -144,7 +147,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                           child: FlutterFlowDropDown<String>(
                             controller: _model.dropDownCityValueController ??=
                                 FormFieldController<String>(null),
-                            options: ['Option 1'],
+                            options: ['Houston'],
                             onChanged: (val) =>
                                 setState(() => _model.dropDownCityValue = val),
                             height: 50.0,
@@ -180,7 +183,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                           child: FlutterFlowDropDown<String>(
                             controller: _model.dropDownStateValueController ??=
                                 FormFieldController<String>(null),
-                            options: ['Option 1'],
+                            options: ['Texas'],
                             onChanged: (val) =>
                                 setState(() => _model.dropDownStateValue = val),
                             height: 50.0,
@@ -227,17 +230,6 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                               _model.dropDownCityValue == '') ||
                           (_model.dropDownStateValue == null ||
                               _model.dropDownStateValue == '')) {
-                        await currentUserReference!
-                            .update(createUsersRecordData(
-                          displayName: _model.inputdisplayNameController.text,
-                          city: _model.dropDownCityValue,
-                          state: _model.dropDownStateValue,
-                        ));
-
-                        context.pushNamed('Home');
-
-                        return;
-                      } else {
                         await showDialog(
                           context: context,
                           builder: (alertDialogContext) {
@@ -254,6 +246,17 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                             );
                           },
                         );
+                        return;
+                      } else {
+                        await currentUserReference!
+                            .update(createUsersRecordData(
+                          displayName: _model.inputdisplayNameController.text,
+                          city: _model.dropDownCityValue,
+                          state: _model.dropDownStateValue,
+                        ));
+
+                        context.pushNamed('Home');
+
                         return;
                       }
                     },

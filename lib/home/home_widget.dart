@@ -123,272 +123,285 @@ class _HomeWidgetState extends State<HomeWidget> {
                     final columnLogsRecord = columnLogsRecordList.isNotEmpty
                         ? columnLogsRecordList.first
                         : null;
-                    return Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 20.0, 20.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Transaction History',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      color: Color(0xFF7F56D9),
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                              ),
-                              FFButtonWidget(
-                                onPressed: () async {
-                                  _model.permissionRes =
-                                      await actions.readSmsPermission();
-                                  if (_model.permissionRes!) {
-                                    _model.readMessages =
-                                        await actions.readMessages(
-                                      columnLogsRecord,
-                                    );
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 20.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Transaction History',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        color: Color(0xFF7F56D9),
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                                FFButtonWidget(
+                                  onPressed: () async {
+                                    _model.permissionRes =
+                                        await actions.readSmsPermission();
+                                    if (_model.permissionRes!) {
+                                      _model.readMessages =
+                                          await actions.readMessages(
+                                        columnLogsRecord,
+                                      );
 
-                                    await currentUserReference!
-                                        .update(createUsersRecordData(
-                                      smsAccess: true,
-                                    ));
-                                    if (_model.readMessages?.length != 0) {
-                                      while (_model.looooop! <
-                                          _model.readMessages!.length) {
-                                        _model.transTime = await actions
-                                            .unixTimestampToDateAndTime(
-                                          getJsonField(
-                                            _model
-                                                .readMessages![_model.looooop!],
-                                            r'''$.unixTime''',
-                                          ),
-                                        );
+                                      await currentUserReference!
+                                          .update(createUsersRecordData(
+                                        smsAccess: true,
+                                      ));
+                                      if (_model.readMessages?.length != 0) {
+                                        while (_model.looooop! <
+                                            _model.readMessages!.length) {
+                                          _model.transTime = await actions
+                                              .unixTimestampToDateAndTime(
+                                            getJsonField(
+                                              _model.readMessages![
+                                                  _model.looooop!],
+                                              r'''$.unixTime''',
+                                            ),
+                                          );
 
-                                        await TransactionsRecord.createDoc(
+                                          await TransactionsRecord.createDoc(
+                                                  currentUserReference!)
+                                              .set(createTransactionsRecordData(
+                                            dateUnix: getJsonField(
+                                              _model.readMessages?[
+                                                  _model.looooop!],
+                                              r'''$.unixTime''',
+                                            ),
+                                            amount: getJsonField(
+                                              _model.readMessages?[
+                                                  _model.looooop!],
+                                              r'''$.amount''',
+                                            ),
+                                            transacDate: _model.transTime,
+                                          ));
+                                          setState(() {
+                                            _model.looooop =
+                                                _model.looooop! + 1;
+                                          });
+                                        }
+
+                                        await LogsRecord.createDoc(
                                                 currentUserReference!)
-                                            .set(createTransactionsRecordData(
-                                          dateUnix: getJsonField(
-                                            _model
-                                                .readMessages?[_model.looooop!],
-                                            r'''$.unixTime''',
-                                          ),
-                                          amount: getJsonField(
-                                            _model
-                                                .readMessages?[_model.looooop!],
-                                            r'''$.amount''',
-                                          ),
-                                          transacDate: _model.transTime,
+                                            .set(createLogsRecordData(
+                                          lastRecordTime: getCurrentTimestamp,
+                                          noOfFields: _model.looooop,
                                         ));
+                                        await showDialog(
+                                          context: context,
+                                          builder: (alertDialogContext) {
+                                            return AlertDialog(
+                                              title: Text('Success'),
+                                              content: Text(
+                                                  '${_model.looooop?.toString()} entered into the Database'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          alertDialogContext),
+                                                  child: Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
                                         setState(() {
-                                          _model.looooop = _model.looooop! + 1;
+                                          _model.looooop = 0;
                                         });
                                       }
-
-                                      await LogsRecord.createDoc(
-                                              currentUserReference!)
-                                          .set(createLogsRecordData(
-                                        lastRecordTime: getCurrentTimestamp,
-                                        noOfFields: _model.looooop,
-                                      ));
+                                    } else {
                                       await showDialog(
                                         context: context,
                                         builder: (alertDialogContext) {
                                           return AlertDialog(
-                                            title: Text('Success'),
-                                            content: Text(
-                                                '${_model.looooop?.toString()} entered into the Database'),
+                                            title: Text('Error'),
+                                            content: Text('Permission Denied'),
                                             actions: [
                                               TextButton(
                                                 onPressed: () => Navigator.pop(
                                                     alertDialogContext),
-                                                child: Text('Ok'),
+                                                child:
+                                                    Text('Permission Denied'),
                                               ),
                                             ],
                                           );
                                         },
                                       );
-                                      setState(() {
-                                        _model.looooop = 0;
-                                      });
+
+                                      await currentUserReference!
+                                          .update(createUsersRecordData(
+                                        smsAccess: false,
+                                      ));
                                     }
-                                  } else {
-                                    await showDialog(
-                                      context: context,
-                                      builder: (alertDialogContext) {
-                                        return AlertDialog(
-                                          title: Text('Error'),
-                                          content: Text('Permission Denied'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  alertDialogContext),
-                                              child: Text('Permission Denied'),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
 
-                                    await currentUserReference!
-                                        .update(createUsersRecordData(
-                                      smsAccess: false,
-                                    ));
-                                  }
-
-                                  setState(() {});
-                                },
-                                text: '',
-                                icon: Icon(
-                                  Icons.replay,
-                                  size: 15.0,
-                                ),
-                                options: FFButtonOptions(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 0.0, 24.0, 0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: Color(0xFFA6F4C5),
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'Inter',
-                                        color: Color(0xFF6941C6),
-                                        fontSize: 32.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                  elevation: 0.0,
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                20.0, 0.0, 20.0, 20.0),
-                            child: StreamBuilder<List<TransactionsRecord>>(
-                              stream: queryTransactionsRecord(
-                                parent: currentUserReference,
-                              ),
-                              builder: (context, snapshot) {
-                                // Customize what your widget looks like when it's loading.
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: SizedBox(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                          FlutterFlowTheme.of(context).primary,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                                List<TransactionsRecord>
-                                    listViewTransactionsRecordList =
-                                    snapshot.data!;
-                                return ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount:
-                                      listViewTransactionsRecordList.length,
-                                  itemBuilder: (context, listViewIndex) {
-                                    final listViewTransactionsRecord =
-                                        listViewTransactionsRecordList[
-                                            listViewIndex];
-                                    return Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 5.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 5.0, 0.0),
-                                            child: Container(
-                                              width: 23.0,
-                                              height: 75.0,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFF7B61FF),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              width: 100.0,
-                                              height: 75.0,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryBackground,
-                                              ),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 8.0,
-                                                                0.0, 2.0),
-                                                    child: Text(
-                                                      'USD ${listViewTransactionsRecord.amount.toString()}',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium,
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                0.0, 2.0),
-                                                    child: Text(
-                                                      '${listViewTransactionsRecord.transacDate?.toString()}',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    listViewTransactionsRecord
-                                                        .transacNote,
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
+                                    setState(() {});
                                   },
-                                );
-                              },
+                                  text: '',
+                                  icon: Icon(
+                                    Icons.replay,
+                                    size: 15.0,
+                                  ),
+                                  options: FFButtonOptions(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        24.0, 0.0, 24.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: Color(0xFFA6F4C5),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          color: Color(0xFF6941C6),
+                                          fontSize: 32.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                    elevation: 0.0,
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  20.0, 0.0, 20.0, 20.0),
+                              child: StreamBuilder<List<TransactionsRecord>>(
+                                stream: queryTransactionsRecord(
+                                  parent: currentUserReference,
+                                ),
+                                builder: (context, snapshot) {
+                                  // Customize what your widget looks like when it's loading.
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                      child: SizedBox(
+                                        width: 50.0,
+                                        height: 50.0,
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  List<TransactionsRecord>
+                                      listViewTransactionsRecordList =
+                                      snapshot.data!;
+                                  return ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount:
+                                        listViewTransactionsRecordList.length,
+                                    itemBuilder: (context, listViewIndex) {
+                                      final listViewTransactionsRecord =
+                                          listViewTransactionsRecordList[
+                                              listViewIndex];
+                                      return Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 0.0, 0.0, 5.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 5.0, 0.0),
+                                              child: Container(
+                                                width: 23.0,
+                                                height: 75.0,
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xFF7B61FF),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                width: 100.0,
+                                                height: 75.0,
+                                                decoration: BoxDecoration(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryBackground,
+                                                ),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  8.0,
+                                                                  0.0,
+                                                                  2.0),
+                                                      child: Text(
+                                                        'USD ${listViewTransactionsRecord.amount.toString()}',
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium,
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0,
+                                                                  2.0),
+                                                      child: Text(
+                                                        '${listViewTransactionsRecord.transacDate?.toString()}',
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      listViewTransactionsRecord
+                                                          .transacNote,
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),

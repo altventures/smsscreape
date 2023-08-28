@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -65,8 +66,8 @@ class _PermissionSuccessfulWidgetState
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Container(
-                          width: 24.0,
-                          height: 24.0,
+                          width: 48.0,
+                          height: 48.0,
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -78,15 +79,27 @@ class _PermissionSuccessfulWidgetState
                         ),
                         Text(
                           'We have been successfully granted the permission',
+                          textAlign: TextAlign.center,
                           style: FlutterFlowTheme.of(context).bodyMedium,
                         ),
-                      ],
+                      ].divide(SizedBox(height: 20.0)),
                     ),
                   ),
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    context.pushNamed('registration');
+                    if ((valueOrDefault(currentUserDocument?.city, '') ==
+                                null ||
+                            valueOrDefault(currentUserDocument?.city, '') ==
+                                '') ||
+                        (valueOrDefault(currentUserDocument?.state, '') ==
+                                null ||
+                            valueOrDefault(currentUserDocument?.state, '') ==
+                                '')) {
+                      context.pushNamed('registration');
+                    } else {
+                      context.pushNamed('Home');
+                    }
                   },
                   text: 'Continue',
                   options: FFButtonOptions(
