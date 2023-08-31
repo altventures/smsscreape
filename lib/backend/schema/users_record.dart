@@ -76,6 +76,11 @@ class UsersRecord extends FirestoreRecord {
   String get status => _status ?? '';
   bool hasStatus() => _status != null;
 
+  // "last_refreshed" field.
+  DateTime? _lastRefreshed;
+  DateTime? get lastRefreshed => _lastRefreshed;
+  bool hasLastRefreshed() => _lastRefreshed != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -89,6 +94,7 @@ class UsersRecord extends FirestoreRecord {
     _otp = castToType<int>(snapshotData['otp']);
     _emailStatus = snapshotData['email_status'] as String?;
     _status = snapshotData['status'] as String?;
+    _lastRefreshed = snapshotData['last_refreshed'] as DateTime?;
   }
 
   static CollectionReference get collection =>
@@ -137,6 +143,7 @@ Map<String, dynamic> createUsersRecordData({
   int? otp,
   String? emailStatus,
   String? status,
+  DateTime? lastRefreshed,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -152,6 +159,7 @@ Map<String, dynamic> createUsersRecordData({
       'otp': otp,
       'email_status': emailStatus,
       'status': status,
+      'last_refreshed': lastRefreshed,
     }.withoutNulls,
   );
 
@@ -174,7 +182,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.smsAccess == e2?.smsAccess &&
         e1?.otp == e2?.otp &&
         e1?.emailStatus == e2?.emailStatus &&
-        e1?.status == e2?.status;
+        e1?.status == e2?.status &&
+        e1?.lastRefreshed == e2?.lastRefreshed;
   }
 
   @override
@@ -190,7 +199,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.smsAccess,
         e?.otp,
         e?.emailStatus,
-        e?.status
+        e?.status,
+        e?.lastRefreshed
       ]);
 
   @override

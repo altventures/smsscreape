@@ -60,10 +60,11 @@ class _PermissionSuccessfulWidgetState
                   child: Container(
                     width: 100.0,
                     decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                      color: Colors.white,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
                           width: 48.0,
@@ -80,7 +81,11 @@ class _PermissionSuccessfulWidgetState
                         Text(
                           'We have been successfully granted the permission',
                           textAlign: TextAlign.center,
-                          style: FlutterFlowTheme.of(context).bodyMedium,
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Readex Pro',
+                                    color: Colors.black,
+                                  ),
                         ),
                       ].divide(SizedBox(height: 20.0)),
                     ),

@@ -17,12 +17,12 @@ class RegistrationModel extends FlutterFlowModel {
   // State field(s) for InputdisplayName widget.
   TextEditingController? inputdisplayNameController;
   String? Function(BuildContext, String?)? inputdisplayNameControllerValidator;
-  // State field(s) for DropDownCity widget.
-  String? dropDownCityValue;
-  FormFieldController<String>? dropDownCityValueController;
   // State field(s) for DropDownState widget.
   String? dropDownStateValue;
   FormFieldController<String>? dropDownStateValueController;
+  // State field(s) for DropDownCity widget.
+  String? dropDownCityValue;
+  FormFieldController<String>? dropDownCityValueController;
 
   /// Initialization and disposal methods.
 

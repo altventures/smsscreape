@@ -70,8 +70,7 @@ class _VerificationLoginWidgetState extends State<VerificationLoginWidget> {
                       Container(
                         width: 100.0,
                         decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
+                          color: Colors.white,
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
@@ -83,6 +82,7 @@ class _VerificationLoginWidgetState extends State<VerificationLoginWidget> {
                                   .bodyMedium
                                   .override(
                                     fontFamily: 'Inter',
+                                    color: Colors.black,
                                     fontSize: 18.0,
                                   ),
                             ),

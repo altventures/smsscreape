@@ -141,6 +141,11 @@ class _SmsPermissionWidgetState extends State<SmsPermissionWidget> {
                                 lastRecordTime: getCurrentTimestamp,
                                 noOfFields: _model.looooop,
                               ));
+
+                              await currentUserReference!
+                                  .update(createUsersRecordData(
+                                lastRefreshed: getCurrentTimestamp,
+                              ));
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(

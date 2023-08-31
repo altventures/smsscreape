@@ -1,3 +1,18 @@
 {
-  "indexes": []
+  "indexes": [
+    {
+      "collectionGroup": "city",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "state_ref",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "city_name",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ]
 }

@@ -1,10 +1,12 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/components/delete_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
+import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -67,9 +69,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       borderRadius: 20.0,
                       borderWidth: 1.0,
                       buttonSize: 40.0,
+                      fillColor: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Color(0x00000000),
                       icon: FaIcon(
                         FontAwesomeIcons.arrowLeft,
-                        color: FlutterFlowTheme.of(context).primaryText,
+                        color: Colors.black,
                         size: 20.0,
                       ),
                       onPressed: () async {
@@ -267,46 +272,78 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                         child: AuthUserStreamWidget(
-                          builder: (context) => FlutterFlowDropDown<String>(
-                            controller: _model.dropDownCityValueController ??=
-                                FormFieldController<String>(
-                              _model.dropDownCityValue ??=
-                                  valueOrDefault(currentUserDocument?.city, ''),
+                          builder: (context) =>
+                              StreamBuilder<List<StateRecord>>(
+                            stream: queryStateRecord(
+                              queryBuilder: (stateRecord) =>
+                                  stateRecord.orderBy('name'),
                             ),
-                            options: ['Houston1', 'Houston'],
-                            onChanged: (val) async {
-                              setState(() => _model.dropDownCityValue = val);
-                              await currentUserReference!
-                                  .update(createUsersRecordData(
-                                city: _model.dropDownCityValue,
-                              ));
-                            },
-                            width: 300.0,
-                            height: 50.0,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFF667085),
-                                  fontSize: 16.0,
+                            builder: (context, snapshot) {
+                              // Customize what your widget looks like when it's loading.
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: SizedBox(
+                                    width: 50.0,
+                                    height: 50.0,
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              List<StateRecord> dropDownStateStateRecordList =
+                                  snapshot.data!;
+                              return FlutterFlowDropDown<String>(
+                                controller:
+                                    _model.dropDownStateValueController ??=
+                                        FormFieldController<String>(
+                                  _model.dropDownStateValue ??= valueOrDefault(
+                                      currentUserDocument?.state, ''),
                                 ),
-                            hintText: 'City',
-                            icon: Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              size: 24.0,
-                            ),
-                            fillColor: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            elevation: 2.0,
-                            borderColor: FlutterFlowTheme.of(context).alternate,
-                            borderWidth: 2.0,
-                            borderRadius: 8.0,
-                            margin: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 4.0, 16.0, 4.0),
-                            hidesUnderline: true,
-                            isSearchable: false,
-                            isMultiSelect: false,
+                                options: dropDownStateStateRecordList
+                                    .map((e) => e.name)
+                                    .toList(),
+                                onChanged: (val) async {
+                                  setState(
+                                      () => _model.dropDownStateValue = val);
+                                  await currentUserReference!
+                                      .update(createUsersRecordData(
+                                    state: _model.dropDownStateValue,
+                                  ));
+                                },
+                                width: 300.0,
+                                height: 50.0,
+                                searchHintTextStyle:
+                                    FlutterFlowTheme.of(context).labelMedium,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: Color(0xFF667085),
+                                      fontSize: 16.0,
+                                    ),
+                                hintText: 'State',
+                                searchHintText: 'Search for an item...',
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  size: 24.0,
+                                ),
+                                fillColor: Colors.white,
+                                elevation: 2.0,
+                                borderColor: Color(0xFFD0D5DD),
+                                borderWidth: 2.0,
+                                borderRadius: 8.0,
+                                margin: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 4.0, 16.0, 4.0),
+                                hidesUnderline: true,
+                                isSearchable: true,
+                                isMultiSelect: false,
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -314,46 +351,79 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                         child: AuthUserStreamWidget(
-                          builder: (context) => FlutterFlowDropDown<String>(
-                            controller: _model.dropDownStateValueController ??=
-                                FormFieldController<String>(
-                              _model.dropDownStateValue ??= valueOrDefault(
-                                  currentUserDocument?.state, ''),
+                          builder: (context) => StreamBuilder<List<CityRecord>>(
+                            stream: queryCityRecord(
+                              queryBuilder: (cityRecord) => cityRecord
+                                  .where('state_ref',
+                                      isEqualTo: _model.dropDownStateValue)
+                                  .orderBy('city_name'),
                             ),
-                            options: ['Texas1', 'Texas'],
-                            onChanged: (val) async {
-                              setState(() => _model.dropDownStateValue = val);
-                              await currentUserReference!
-                                  .update(createUsersRecordData(
-                                state: _model.dropDownStateValue,
-                              ));
-                            },
-                            width: 300.0,
-                            height: 50.0,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFF667085),
-                                  fontSize: 16.0,
+                            builder: (context, snapshot) {
+                              // Customize what your widget looks like when it's loading.
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: SizedBox(
+                                    width: 50.0,
+                                    height: 50.0,
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              List<CityRecord> dropDownCityCityRecordList =
+                                  snapshot.data!;
+                              return FlutterFlowDropDown<String>(
+                                controller:
+                                    _model.dropDownCityValueController ??=
+                                        FormFieldController<String>(
+                                  _model.dropDownCityValue ??= valueOrDefault(
+                                      currentUserDocument?.city, ''),
                                 ),
-                            hintText: 'State',
-                            icon: Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              size: 24.0,
-                            ),
-                            fillColor: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            elevation: 2.0,
-                            borderColor: FlutterFlowTheme.of(context).alternate,
-                            borderWidth: 2.0,
-                            borderRadius: 8.0,
-                            margin: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 4.0, 16.0, 4.0),
-                            hidesUnderline: true,
-                            isSearchable: false,
-                            isMultiSelect: false,
+                                options: dropDownCityCityRecordList
+                                    .map((e) => e.cityName)
+                                    .toList(),
+                                onChanged: (val) async {
+                                  setState(
+                                      () => _model.dropDownCityValue = val);
+                                  await currentUserReference!
+                                      .update(createUsersRecordData(
+                                    city: _model.dropDownCityValue,
+                                  ));
+                                },
+                                width: 300.0,
+                                height: 50.0,
+                                searchHintTextStyle:
+                                    FlutterFlowTheme.of(context).labelMedium,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: Color(0xFF667085),
+                                      fontSize: 16.0,
+                                    ),
+                                hintText: 'City',
+                                searchHintText: 'Search for an item...',
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  size: 24.0,
+                                ),
+                                fillColor: Colors.white,
+                                elevation: 2.0,
+                                borderColor: Color(0xFFD0D5DD),
+                                borderWidth: 2.0,
+                                borderRadius: 8.0,
+                                margin: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 4.0, 16.0, 4.0),
+                                hidesUnderline: true,
+                                isSearchable: true,
+                                isMultiSelect: false,
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -370,7 +440,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             await authManager.signOut();
                             GoRouter.of(context).clearRedirectLocation();
 
-                            context.pushNamedAuth('Login', context.mounted);
+                            context.goNamedAuth('Login', context.mounted);
                           },
                           child: Text(
                             'Logout',
@@ -385,29 +455,52 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            await authManager.deleteUser(context);
-
-                            context.goNamedAuth('Home', context.mounted);
-                          },
-                          child: Text(
-                            'Delete Account',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFFC4320A),
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                      Builder(
+                        builder: (context) => Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 0.0),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              await showAlignedDialog(
+                                barrierColor: Color(0xC27C7C7C),
+                                context: context,
+                                isGlobal: true,
+                                avoidOverflow: false,
+                                targetAnchor: AlignmentDirectional(0.0, 0.0)
+                                    .resolve(Directionality.of(context)),
+                                followerAnchor: AlignmentDirectional(0.0, 0.0)
+                                    .resolve(Directionality.of(context)),
+                                builder: (dialogContext) {
+                                  return Material(
+                                    color: Colors.transparent,
+                                    child: GestureDetector(
+                                      onTap: () => FocusScope.of(context)
+                                          .requestFocus(_model.unfocusNode),
+                                      child: Container(
+                                        height: 250.0,
+                                        width: 300.0,
+                                        child: DeleteWidget(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ).then((value) => setState(() {}));
+                            },
+                            child: Text(
+                              'Delete Account',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFFC4320A),
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
                           ),
                         ),
                       ),
