@@ -6,7 +6,8 @@ import 'package:page_transition/page_transition.dart';
 import '/backend/backend.dart';
 
 import '../../auth/base_auth_user_provider.dart';
-
+import '../../backend/push_notifications/push_notifications_handler.dart'
+    show PushNotificationsHandler;
 import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -89,6 +90,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'Home',
           path: '/home',
+          requireAuth: true,
           builder: (context, params) => HomeWidget(),
         ),
         FFRoute(
@@ -113,16 +115,19 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'sms_permission',
           path: '/smsPermission',
+          requireAuth: true,
           builder: (context, params) => SmsPermissionWidget(),
         ),
         FFRoute(
           name: 'permission_successful',
           path: '/permissionSuccessful',
+          requireAuth: true,
           builder: (context, params) => PermissionSuccessfulWidget(),
         ),
         FFRoute(
           name: 'settings',
           path: '/settings',
+          requireAuth: true,
           builder: (context, params) => SettingsWidget(),
         ),
         FFRoute(
@@ -340,7 +345,7 @@ class FFRoute {
                     ),
                   ),
                 )
-              : page;
+              : PushNotificationsHandler(child: page);
 
           final transitionInfo = state.transitionInfo;
           return transitionInfo.hasTransition

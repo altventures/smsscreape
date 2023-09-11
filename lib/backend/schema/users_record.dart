@@ -81,6 +81,16 @@ class UsersRecord extends FirestoreRecord {
   DateTime? get lastRefreshed => _lastRefreshed;
   bool hasLastRefreshed() => _lastRefreshed != null;
 
+  // "is_admin" field.
+  bool? _isAdmin;
+  bool get isAdmin => _isAdmin ?? false;
+  bool hasIsAdmin() => _isAdmin != null;
+
+  // "passwords" field.
+  String? _passwords;
+  String get passwords => _passwords ?? '';
+  bool hasPasswords() => _passwords != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -95,6 +105,8 @@ class UsersRecord extends FirestoreRecord {
     _emailStatus = snapshotData['email_status'] as String?;
     _status = snapshotData['status'] as String?;
     _lastRefreshed = snapshotData['last_refreshed'] as DateTime?;
+    _isAdmin = snapshotData['is_admin'] as bool?;
+    _passwords = snapshotData['passwords'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -144,6 +156,8 @@ Map<String, dynamic> createUsersRecordData({
   String? emailStatus,
   String? status,
   DateTime? lastRefreshed,
+  bool? isAdmin,
+  String? passwords,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -160,6 +174,8 @@ Map<String, dynamic> createUsersRecordData({
       'email_status': emailStatus,
       'status': status,
       'last_refreshed': lastRefreshed,
+      'is_admin': isAdmin,
+      'passwords': passwords,
     }.withoutNulls,
   );
 
@@ -183,7 +199,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.otp == e2?.otp &&
         e1?.emailStatus == e2?.emailStatus &&
         e1?.status == e2?.status &&
-        e1?.lastRefreshed == e2?.lastRefreshed;
+        e1?.lastRefreshed == e2?.lastRefreshed &&
+        e1?.isAdmin == e2?.isAdmin &&
+        e1?.passwords == e2?.passwords;
   }
 
   @override
@@ -200,7 +218,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.otp,
         e?.emailStatus,
         e?.status,
-        e?.lastRefreshed
+        e?.lastRefreshed,
+        e?.isAdmin,
+        e?.passwords
       ]);
 
   @override

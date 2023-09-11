@@ -1,7 +1,9 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -56,7 +58,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               children: [
                 Expanded(
                   child: Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
+                    alignment: AlignmentDirectional(0.00, 0.00),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.asset(
@@ -90,6 +92,11 @@ class _LoginWidgetState extends State<LoginWidget> {
                               if (user == null) {
                                 return;
                               }
+
+                              await currentUserReference!
+                                  .update(createUsersRecordData(
+                                isAdmin: false,
+                              ));
                               if ((valueOrDefault<bool>(
                                           currentUserDocument?.smsAccess,
                                           false) ==

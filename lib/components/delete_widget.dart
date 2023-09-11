@@ -56,7 +56,7 @@ class _DeleteWidgetState extends State<DeleteWidget> {
       width: 300.0,
       height: 250.0,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: Padding(
@@ -66,10 +66,18 @@ class _DeleteWidgetState extends State<DeleteWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
+              'If you want to delete your data too. Please send email at abc@abc.com',
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: 'Readex Pro',
+                    color: Colors.black,
+                  ),
+            ),
+            Text(
               'Please type ${currentUserEmail} to delete your account.',
               textAlign: TextAlign.center,
               style: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: 'Inter',
+                    color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
             ),
@@ -88,7 +96,7 @@ class _DeleteWidgetState extends State<DeleteWidget> {
                       hintStyle: FlutterFlowTheme.of(context).labelMedium,
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: FlutterFlowTheme.of(context).alternate,
+                          color: Color(0xFFE0E3E7),
                           width: 2.0,
                         ),
                         borderRadius: BorderRadius.circular(8.0),
@@ -115,7 +123,10 @@ class _DeleteWidgetState extends State<DeleteWidget> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    style: FlutterFlowTheme.of(context).bodyMedium,
+                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                          fontFamily: 'Readex Pro',
+                          color: Colors.black,
+                        ),
                     validator: _model.inputDelEmailControllerValidator
                         .asValidator(context),
                   ),
@@ -142,24 +153,6 @@ class _DeleteWidgetState extends State<DeleteWidget> {
                     if (_model.inputDelEmailController.text ==
                         currentUserEmail) {
                       await authManager.deleteUser(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Your account  has been deleted',
-                            style: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
-                          duration: Duration(milliseconds: 2000),
-                          backgroundColor:
-                              FlutterFlowTheme.of(context).secondary,
-                        ),
-                      );
 
                       context.goNamed('Login');
                     } else {

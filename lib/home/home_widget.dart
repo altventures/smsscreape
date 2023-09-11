@@ -7,8 +7,9 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'home_model.dart';
 export 'home_model.dart';
@@ -29,6 +30,210 @@ class _HomeWidgetState extends State<HomeWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomeModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.permissionResLoad = await actions.readSmsPermission();
+      await showDialog(
+        context: context,
+        builder: (alertDialogContext) {
+          return AlertDialog(
+            title: Text('loading function working'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(alertDialogContext),
+                child: Text('Ok'),
+              ),
+            ],
+          );
+        },
+      );
+      if (_model.permissionResLoad == true) {
+        if (valueOrDefault<bool>(currentUserDocument?.smsAccess, false) ==
+            true) {
+          await showDialog(
+            context: context,
+            builder: (alertDialogContext) {
+              return AlertDialog(
+                title: Text('entering into custom action readMessagescopy'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(alertDialogContext),
+                    child: Text('Ok'),
+                  ),
+                ],
+              );
+            },
+          );
+          _model.readmessagesLoad = await actions.readMessagesCopy(
+            currentUserDocument!.lastRefreshed!.secondsSinceEpoch,
+          );
+          await showDialog(
+            context: context,
+            builder: (alertDialogContext) {
+              return AlertDialog(
+                title: Text('read messages function working'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(alertDialogContext),
+                    child: Text('Ok'),
+                  ),
+                ],
+              );
+            },
+          );
+
+          await currentUserReference!.update(createUsersRecordData(
+            smsAccess: true,
+          ));
+          await showDialog(
+            context: context,
+            builder: (alertDialogContext) {
+              return AlertDialog(
+                title: Text(_model.readmessagesLoad!.length.toString()),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(alertDialogContext),
+                    child: Text('Ok'),
+                  ),
+                ],
+              );
+            },
+          );
+          if (_model.readmessagesLoad?.length == 0) {
+            await currentUserReference!.update(createUsersRecordData(
+              lastRefreshed: getCurrentTimestamp,
+            ));
+          } else {
+            while (_model.looooop! < _model.readmessagesLoad!.length) {
+              _model.transTimeCopy = await actions.unixTimestampToDateAndTime(
+                getJsonField(
+                  _model.readmessagesLoad![_model.looooop!],
+                  r'''$.unixTime''',
+                ),
+              );
+              await showDialog(
+                context: context,
+                builder: (alertDialogContext) {
+                  return AlertDialog(
+                    title: Text('Entered in loop'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(alertDialogContext),
+                        child: Text('Ok'),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              await TransactionsRecord.createDoc(currentUserReference!)
+                  .set(createTransactionsRecordData(
+                dateUnix: getJsonField(
+                  _model.readMessages?[_model.looooop!],
+                  r'''$.unixTime''',
+                ),
+                amount: getJsonField(
+                  _model.readMessages?[_model.looooop!],
+                  r'''$.amount''',
+                ),
+                transacDate: _model.transTimeCopy,
+              ));
+              setState(() {
+                _model.looooop = _model.looooop! + 1;
+              });
+            }
+
+            await LogsRecord.createDoc(currentUserReference!)
+                .set(createLogsRecordData(
+              lastRecordTime: getCurrentTimestamp,
+              noOfFields: _model.looooop,
+            ));
+
+            await currentUserReference!.update(createUsersRecordData(
+              lastRefreshed: getCurrentTimestamp,
+            ));
+            await showDialog(
+              context: context,
+              builder: (alertDialogContext) {
+                return AlertDialog(
+                  title: Text('Records Updated'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(alertDialogContext),
+                      child: Text('Ok'),
+                    ),
+                  ],
+                );
+              },
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${_model.looooop?.toString()} transactions entered into database',
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 1600),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
+              ),
+            );
+            setState(() {
+              _model.looooop = 0;
+            });
+          }
+        } else {
+          await showDialog(
+            context: context,
+            builder: (alertDialogContext) {
+              return AlertDialog(
+                title: Text('sms access is disabled'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(alertDialogContext),
+                    child: Text('Ok'),
+                  ),
+                ],
+              );
+            },
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Please active app service from settings page',
+                style: FlutterFlowTheme.of(context).titleSmall.override(
+                      fontFamily: 'Readex Pro',
+                      color: FlutterFlowTheme.of(context).primaryText,
+                    ),
+              ),
+              duration: Duration(milliseconds: 1600),
+              backgroundColor: Color(0xFFFF0000),
+            ),
+          );
+        }
+      } else {
+        await showDialog(
+          context: context,
+          builder: (alertDialogContext) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Permission Denied'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(alertDialogContext),
+                  child: Text('Permission Denied'),
+                ),
+              ],
+            );
+          },
+        );
+
+        await currentUserReference!.update(createUsersRecordData(
+          smsAccess: false,
+        ));
+      }
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -175,6 +380,44 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             ),
                                       ),
                                     ),
+                                  if (currentUserDocument?.lastRefreshed != null
+                                      ? true
+                                      : false)
+                                    AuthUserStreamWidget(
+                                      builder: (context) => FutureBuilder<int>(
+                                        future: queryTransactionsRecordCount(
+                                          parent: currentUserReference,
+                                        ),
+                                        builder: (context, snapshot) {
+                                          // Customize what your widget looks like when it's loading.
+                                          if (!snapshot.hasData) {
+                                            return Center(
+                                              child: SizedBox(
+                                                width: 40.0,
+                                                height: 40.0,
+                                                child: SpinKitFadingCircle(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  size: 40.0,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                          int textCount = snapshot.data!;
+                                          return Text(
+                                            '${textCount.toString()} Transactions Scraped',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'Inter',
+                                                  color: Color(0xFF101828),
+                                                  fontSize: 12.0,
+                                                ),
+                                          );
+                                        },
+                                      ),
+                                    ),
                                 ],
                               ),
                               FFButtonWidget(
@@ -195,7 +438,12 @@ class _HomeWidgetState extends State<HomeWidget> {
                                           .update(createUsersRecordData(
                                         smsAccess: true,
                                       ));
-                                      if (_model.readMessages?.length != 0) {
+                                      if (_model.readMessages?.length == 0) {
+                                        await currentUserReference!
+                                            .update(createUsersRecordData(
+                                          lastRefreshed: getCurrentTimestamp,
+                                        ));
+                                      } else {
                                         while (_model.looooop! <
                                             _model.readMessages!.length) {
                                           _model.transTime = await actions
@@ -338,109 +586,122 @@ class _HomeWidgetState extends State<HomeWidget> {
                             ],
                           ),
                         ),
+                        Divider(
+                          thickness: 1.0,
+                          color: Color(0xCCD9D9D9),
+                        ),
                         Expanded(
                           child: Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 20.0, 0.0, 20.0, 20.0),
-                            child: PagedListView<DocumentSnapshot<Object?>?,
-                                TransactionsRecord>(
-                              pagingController: _model.setListViewController(
-                                  TransactionsRecord.collection(
-                                          currentUserReference)
-                                      .orderBy('transac_date',
-                                          descending: true),
-                                  parent: currentUserReference),
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              reverse: false,
-                              scrollDirection: Axis.vertical,
-                              builderDelegate:
-                                  PagedChildBuilderDelegate<TransactionsRecord>(
-                                // Customize what your widget looks like when it's loading the first page.
-                                firstPageProgressIndicatorBuilder: (_) =>
-                                    Center(
-                                  child: SizedBox(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        FlutterFlowTheme.of(context).primary,
+                            child: StreamBuilder<List<TransactionsRecord>>(
+                              stream: queryTransactionsRecord(
+                                parent: currentUserReference,
+                                queryBuilder: (transactionsRecord) =>
+                                    transactionsRecord.orderBy('transac_date',
+                                        descending: true),
+                              ),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                // Customize what your widget looks like when it's loading another page.
-                                newPageProgressIndicatorBuilder: (_) => Center(
-                                  child: SizedBox(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        FlutterFlowTheme.of(context).primary,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                itemBuilder: (context, _, listViewIndex) {
-                                  final listViewTransactionsRecord = _model
-                                      .listViewPagingController!
-                                      .itemList![listViewIndex];
-                                  return Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 21.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 5.0, 0.0),
-                                          child: Container(
-                                            width: 23.0,
-                                            height: 75.0,
-                                            decoration: BoxDecoration(
-                                              color: Color(0xFF7B61FF),
+                                  );
+                                }
+                                List<TransactionsRecord>
+                                    listViewTransactionsRecordList =
+                                    snapshot.data!;
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      listViewTransactionsRecordList.length,
+                                  itemBuilder: (context, listViewIndex) {
+                                    final listViewTransactionsRecord =
+                                        listViewTransactionsRecordList[
+                                            listViewIndex];
+                                    return Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 21.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 5.0, 0.0),
+                                            child: Container(
+                                              width: 23.0,
+                                              height: 75.0,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFF7B61FF),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            width: 100.0,
-                                            height: 75.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                            ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 8.0, 0.0, 2.0),
-                                                  child: Text(
-                                                    'USD ${listViewTransactionsRecord.amount.toString()}',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'Inter',
-                                                          color:
-                                                              Color(0xFF667085),
-                                                          fontSize: 20.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
+                                          Expanded(
+                                            child: Container(
+                                              width: 100.0,
+                                              height: 75.0,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 8.0,
+                                                                0.0, 2.0),
+                                                    child: Text(
+                                                      'USD ${listViewTransactionsRecord.amount.toString()}',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily: 'Inter',
+                                                            color: Color(
+                                                                0xFF667085),
+                                                            fontSize: 20.0,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                    ),
                                                   ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 0.0, 0.0, 2.0),
-                                                  child: Text(
-                                                    '${listViewTransactionsRecord.transacDate?.toString()}',
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 2.0),
+                                                    child: Text(
+                                                      '${listViewTransactionsRecord.transacDate?.toString()}',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily: 'Inter',
+                                                            color: Color(
+                                                                0xFF667085),
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    listViewTransactionsRecord
+                                                        .transacNote,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -452,30 +713,16 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                               FontWeight.w600,
                                                         ),
                                                   ),
-                                                ),
-                                                Text(
-                                                  listViewTransactionsRecord
-                                                      .transacNote,
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF667085),
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ),
                         ),

@@ -5,10 +5,12 @@ import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -283,12 +285,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               if (!snapshot.hasData) {
                                 return Center(
                                   child: SizedBox(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        FlutterFlowTheme.of(context).primary,
-                                      ),
+                                    width: 40.0,
+                                    height: 40.0,
+                                    child: SpinKitFadingCircle(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      size: 40.0,
                                     ),
                                   ),
                                 );
@@ -340,6 +342,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                 margin: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 4.0, 16.0, 4.0),
                                 hidesUnderline: true,
+                                disabled: valueOrDefault(
+                                            currentUserDocument?.state, '') !=
+                                        null &&
+                                    valueOrDefault(
+                                            currentUserDocument?.state, '') !=
+                                        '',
                                 isSearchable: true,
                                 isMultiSelect: false,
                               );
@@ -353,22 +361,21 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         child: AuthUserStreamWidget(
                           builder: (context) => StreamBuilder<List<CityRecord>>(
                             stream: queryCityRecord(
-                              queryBuilder: (cityRecord) => cityRecord
-                                  .where('state_ref',
-                                      isEqualTo: _model.dropDownStateValue)
-                                  .orderBy('city_name'),
+                              queryBuilder: (cityRecord) => cityRecord.where(
+                                  'state_ref',
+                                  isEqualTo: _model.dropDownStateValue),
                             ),
                             builder: (context, snapshot) {
                               // Customize what your widget looks like when it's loading.
                               if (!snapshot.hasData) {
                                 return Center(
                                   child: SizedBox(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        FlutterFlowTheme.of(context).primary,
-                                      ),
+                                    width: 40.0,
+                                    height: 40.0,
+                                    child: SpinKitFadingCircle(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      size: 40.0,
                                     ),
                                   ),
                                 );
@@ -378,10 +385,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               return FlutterFlowDropDown<String>(
                                 controller:
                                     _model.dropDownCityValueController ??=
-                                        FormFieldController<String>(
-                                  _model.dropDownCityValue ??= valueOrDefault(
-                                      currentUserDocument?.city, ''),
-                                ),
+                                        FormFieldController<String>(null),
                                 options: dropDownCityCityRecordList
                                     .map((e) => e.cityName)
                                     .toList(),
@@ -404,7 +408,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                       color: Color(0xFF667085),
                                       fontSize: 16.0,
                                     ),
-                                hintText: 'City',
+                                hintText: valueOrDefault(
+                                    currentUserDocument?.city, ''),
                                 searchHintText: 'Search for an item...',
                                 icon: Icon(
                                   Icons.keyboard_arrow_down_rounded,
@@ -420,6 +425,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                 margin: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 4.0, 16.0, 4.0),
                                 hidesUnderline: true,
+                                disabled: valueOrDefault(
+                                            currentUserDocument?.state, '') !=
+                                        null &&
+                                    valueOrDefault(
+                                            currentUserDocument?.state, '') !=
+                                        '',
                                 isSearchable: true,
                                 isMultiSelect: false,
                               );
@@ -436,6 +447,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            await currentUserReference!
+                                .update(createUsersRecordData(
+                              smsAccess: false,
+                            ));
                             GoRouter.of(context).prepareAuthEvent();
                             await authManager.signOut();
                             GoRouter.of(context).clearRedirectLocation();

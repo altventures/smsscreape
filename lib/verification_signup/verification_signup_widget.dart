@@ -1,4 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -166,56 +165,7 @@ class _VerificationSignupWidgetState extends State<VerificationSignupWidget> {
                   ),
                 ),
                 FFButtonWidget(
-                  onPressed: () async {
-                    if (widget.otp.toString() ==
-                        _model.pinCodeController!.text) {
-                      GoRouter.of(context).prepareAuthEvent();
-                      if (widget.email! != widget.email!) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Passwords don\'t match!',
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-
-                      final user = await authManager.createAccountWithEmail(
-                        context,
-                        widget.email!,
-                        widget.email!,
-                      );
-                      if (user == null) {
-                        return;
-                      }
-
-                      setState(() {
-                        FFAppState().userId = currentUserReference!.id;
-                      });
-
-                      context.pushNamedAuth('sms_permission', context.mounted);
-
-                      return;
-                    } else {
-                      await showDialog(
-                        context: context,
-                        builder: (alertDialogContext) {
-                          return AlertDialog(
-                            title: Text('OTP not correct'),
-                            actions: [
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.pop(alertDialogContext),
-                                child: Text('Ok'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      return;
-                    }
-                  },
+                  onPressed: () async {},
                   text: 'Continue',
                   options: FFButtonOptions(
                     width: double.infinity,

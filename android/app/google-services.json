@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "831486713830-4baql0lmccis8q4ejf5rlvcvnh5lrgpf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.smstrackingapp",
+            "certificate_hash": "bf94bc0dbaf2aaa72e14e17c22ff6361ee86b89f"
+          }
+        },
+        {
           "client_id": "831486713830-ild61a82245qup63bb43a9h1p67vs33s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -22,7 +30,15 @@
           }
         },
         {
-          "client_id": "831486713830-vrqebnhbbc418oifnu2v7hsvc4bfu372.apps.googleusercontent.com",
+          "client_id": "831486713830-qvlodiuoavu3nkdbbvcc96lgcmeiqq8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.smstrackingapp",
+            "certificate_hash": "e5210dbd8588608042ec2f3a088da2e337895cfd"
+          }
+        },
+        {
+          "client_id": "831486713830-3akp97ldlu8kaasl8ki49q5ic3afnkmd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +51,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "831486713830-vrqebnhbbc418oifnu2v7hsvc4bfu372.apps.googleusercontent.com",
+              "client_id": "831486713830-3akp97ldlu8kaasl8ki49q5ic3afnkmd.apps.googleusercontent.com",
               "client_type": 3
             },
             {
