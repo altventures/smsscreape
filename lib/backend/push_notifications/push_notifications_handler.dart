@@ -124,17 +124,10 @@ final parametersBuilderMap =
   'sms_permission': ParameterData.none(),
   'permission_successful': ParameterData.none(),
   'settings': ParameterData.none(),
-  'admin_login': ParameterData.none(),
-  'adminHome': ParameterData.none(),
   'verificationSignup': (data) async => ParameterData(
         allParams: {
           'email': getParameter<String>(data, 'email'),
           'otp': getParameter<int>(data, 'otp'),
-        },
-      ),
-  'user_transac_hist': (data) async => ParameterData(
-        allParams: {
-          'userid': getParameter<DocumentReference>(data, 'userid'),
         },
       ),
 };

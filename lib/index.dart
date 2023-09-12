@@ -8,9 +8,5 @@ export '/sms_permission/sms_permission_widget.dart' show SmsPermissionWidget;
 export '/permission_successful/permission_successful_widget.dart'
     show PermissionSuccessfulWidget;
 export '/settings/settings_widget.dart' show SettingsWidget;
-export '/admin_login/admin_login_widget.dart' show AdminLoginWidget;
-export '/admin_home/admin_home_widget.dart' show AdminHomeWidget;
 export '/verification_signup/verification_signup_widget.dart'
     show VerificationSignupWidget;
-export '/user_transac_hist/user_transac_hist_widget.dart'
-    show UserTransacHistWidget;

@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/delete_widget.dart';
+import '/components/logout_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -438,18 +439,48 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                        child: Text(
-                          'Logout',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
+                      Builder(
+                        builder: (context) => Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 0.0),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              await showAlignedDialog(
+                                context: context,
+                                isGlobal: true,
+                                avoidOverflow: false,
+                                targetAnchor: AlignmentDirectional(0.0, 0.0)
+                                    .resolve(Directionality.of(context)),
+                                followerAnchor: AlignmentDirectional(0.0, 0.0)
+                                    .resolve(Directionality.of(context)),
+                                builder: (dialogContext) {
+                                  return Material(
+                                    color: Colors.transparent,
+                                    child: GestureDetector(
+                                      onTap: () => FocusScope.of(context)
+                                          .requestFocus(_model.unfocusNode),
+                                      child: LogoutWidget(),
+                                    ),
+                                  );
+                                },
+                              ).then((value) => setState(() {}));
+                            },
+                            child: Text(
+                              'Logout',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
                                     fontFamily: 'Inter',
                                     color: Color(0xFF7F56D9),
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w600,
                                   ),
+                            ),
+                          ),
                         ),
                       ),
                       Builder(

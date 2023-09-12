@@ -356,6 +356,24 @@ class _HomeWidgetState extends State<HomeWidget> {
                                               r'''$.date''',
                                             ),
                                           );
+                                          await showDialog(
+                                            context: context,
+                                            builder: (alertDialogContext) {
+                                              return AlertDialog(
+                                                title: Text(dateTimeFormat(
+                                                    'yMMMd',
+                                                    _model.transTimeCopy)),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(
+                                                            alertDialogContext),
+                                                    child: Text('Ok'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
 
                                           await TransactionsRecord.createDoc(
                                                   currentUserReference!)

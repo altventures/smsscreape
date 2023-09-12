@@ -131,29 +131,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => SettingsWidget(),
         ),
         FFRoute(
-          name: 'admin_login',
-          path: '/adminLogin',
-          builder: (context, params) => AdminLoginWidget(),
-        ),
-        FFRoute(
-          name: 'adminHome',
-          path: '/adminHome',
-          builder: (context, params) => AdminHomeWidget(),
-        ),
-        FFRoute(
           name: 'verificationSignup',
           path: '/verificationSignup',
           builder: (context, params) => VerificationSignupWidget(
             email: params.getParam('email', ParamType.String),
             otp: params.getParam('otp', ParamType.int),
-          ),
-        ),
-        FFRoute(
-          name: 'user_transac_hist',
-          path: '/userTransacHist',
-          builder: (context, params) => UserTransacHistWidget(
-            userid: params.getParam(
-                'userid', ParamType.DocumentReference, false, ['users']),
           ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
