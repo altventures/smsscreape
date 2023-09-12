@@ -441,33 +441,15 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            await currentUserReference!
-                                .update(createUsersRecordData(
-                              smsAccess: false,
-                            ));
-                            GoRouter.of(context).prepareAuthEvent();
-                            await authManager.signOut();
-                            GoRouter.of(context).clearRedirectLocation();
-
-                            context.goNamedAuth('Login', context.mounted);
-                          },
-                          child: Text(
-                            'Logout',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFF7F56D9),
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
+                        child: Text(
+                          'Logout',
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF7F56D9),
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                       ),
                       Builder(

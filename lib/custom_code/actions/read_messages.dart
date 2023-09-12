@@ -37,11 +37,30 @@ Future<List<dynamic>> readMessages(LogsRecord? lastLog) async {
         : null;
     final date = message.date;
     final unixTimestamp = (date!.millisecondsSinceEpoch / 1000).round();
+    final dateRegex =
+        RegExp(r'\b(\d{2}-\w{3}-\d{4} \d{2}:\d{2}:\d{2} [AP]M)\b');
+
+    final dateMatch = dateRegex.firstMatch(message.body ?? '');
+    final extractedDate =
+        dateMatch != null ? dateMatch.group(1) : message.date.toString();
+    print(extractedDate);
+
+// Define the input format
+    final inputFormat = DateFormat("dd-MMM-yyyy hh:mm:ss a");
+
+// Parse the extractedDate into a DateTime object
+    final dateTime = inputFormat.parse(extractedDate!);
+
+// Convert the DateTime object into Unix time (in milliseconds)
+    final unixTime = dateTime.secondsSinceEpoch;
+
+    print(unixTime);
+
     print(amount);
     return {
       'body': message.body,
       'address': message.address,
-      'date': message.date,
+      'date': unixTime,
       'dateSent': message.dateSent,
       'id': message.id,
       'amount': amount,

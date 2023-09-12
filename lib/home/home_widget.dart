@@ -34,72 +34,16 @@ class _HomeWidgetState extends State<HomeWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.permissionResLoad = await actions.readSmsPermission();
-      await showDialog(
-        context: context,
-        builder: (alertDialogContext) {
-          return AlertDialog(
-            title: Text('loading function working'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(alertDialogContext),
-                child: Text('Ok'),
-              ),
-            ],
-          );
-        },
-      );
       if (_model.permissionResLoad == true) {
         if (valueOrDefault<bool>(currentUserDocument?.smsAccess, false) ==
             true) {
-          await showDialog(
-            context: context,
-            builder: (alertDialogContext) {
-              return AlertDialog(
-                title: Text('entering into custom action readMessagescopy'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(alertDialogContext),
-                    child: Text('Ok'),
-                  ),
-                ],
-              );
-            },
-          );
           _model.readmessagesLoad = await actions.readMessagesCopy(
             currentUserDocument!.lastRefreshed!.secondsSinceEpoch,
-          );
-          await showDialog(
-            context: context,
-            builder: (alertDialogContext) {
-              return AlertDialog(
-                title: Text('read messages function working'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(alertDialogContext),
-                    child: Text('Ok'),
-                  ),
-                ],
-              );
-            },
           );
 
           await currentUserReference!.update(createUsersRecordData(
             smsAccess: true,
           ));
-          await showDialog(
-            context: context,
-            builder: (alertDialogContext) {
-              return AlertDialog(
-                title: Text(_model.readmessagesLoad!.length.toString()),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(alertDialogContext),
-                    child: Text('Ok'),
-                  ),
-                ],
-              );
-            },
-          );
           if (_model.readmessagesLoad?.length == 0) {
             await currentUserReference!.update(createUsersRecordData(
               lastRefreshed: getCurrentTimestamp,
@@ -111,20 +55,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                   _model.readmessagesLoad![_model.looooop!],
                   r'''$.unixTime''',
                 ),
-              );
-              await showDialog(
-                context: context,
-                builder: (alertDialogContext) {
-                  return AlertDialog(
-                    title: Text('Entered in loop'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(alertDialogContext),
-                        child: Text('Ok'),
-                      ),
-                    ],
-                  );
-                },
               );
 
               await TransactionsRecord.createDoc(currentUserReference!)
@@ -153,20 +83,6 @@ class _HomeWidgetState extends State<HomeWidget> {
             await currentUserReference!.update(createUsersRecordData(
               lastRefreshed: getCurrentTimestamp,
             ));
-            await showDialog(
-              context: context,
-              builder: (alertDialogContext) {
-                return AlertDialog(
-                  title: Text('Records Updated'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(alertDialogContext),
-                      child: Text('Ok'),
-                    ),
-                  ],
-                );
-              },
-            );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
@@ -184,20 +100,6 @@ class _HomeWidgetState extends State<HomeWidget> {
             });
           }
         } else {
-          await showDialog(
-            context: context,
-            builder: (alertDialogContext) {
-              return AlertDialog(
-                title: Text('sms access is disabled'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(alertDialogContext),
-                    child: Text('Ok'),
-                  ),
-                ],
-              );
-            },
-          );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -451,7 +353,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             getJsonField(
                                               _model.readMessages![
                                                   _model.looooop!],
-                                              r'''$.unixTime''',
+                                              r'''$.date''',
                                             ),
                                           );
 

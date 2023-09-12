@@ -33,12 +33,20 @@ Future<List<dynamic>> readMessagesCopy(int timestamp) async {
     final amount = amountMatch != null
         ? double.tryParse(amountMatch.group(1)!.replaceAll(',', ''))
         : null;
-    final date = message.date;
-    final unixTimestamp = (date!.millisecondsSinceEpoch / 1000).round();
+
+    // Extract the date from the message body
+    final dateRegex =
+        RegExp(r'(\d{2}-[A-Za-z]{3}-\d{4} \d{2}:\d{2}:\d{2} [APM]{2})');
+    final dateMatch = dateRegex.firstMatch(message.body ?? '');
+    final extractedDate =
+        dateMatch != null ? dateMatch.group(1) : message.date.toString();
+
+    final unixTimestamp = (message.date!.millisecondsSinceEpoch / 1000).round();
     return {
       'body': message.body,
       'address': message.address,
-      'date': message.date,
+      'date':
+          extractedDate, // The extracted date or the original date if extraction fails
       'dateSent': message.dateSent,
       'id': message.id,
       'amount': amount,
@@ -48,7 +56,7 @@ Future<List<dynamic>> readMessagesCopy(int timestamp) async {
 
   // Filter the messages to only include new messages
   messagesJson = messagesJson.where((message) {
-    return message['unixTime1'] > timestamp;
+    return message['unixTime'] > timestamp;
   }).toList();
 
   return messagesJson;
