@@ -60,11 +60,11 @@ class _HomeWidgetState extends State<HomeWidget> {
               await TransactionsRecord.createDoc(currentUserReference!)
                   .set(createTransactionsRecordData(
                 dateUnix: getJsonField(
-                  _model.readMessages?[_model.looooop!],
+                  _model.readmessagesLoad?[_model.looooop!],
                   r'''$.unixTime''',
                 ),
                 amount: getJsonField(
-                  _model.readMessages?[_model.looooop!],
+                  _model.readmessagesLoad?[_model.looooop!],
                   r'''$.amount''',
                 ),
                 transacDate: _model.transTimeCopy,
