@@ -33,20 +33,32 @@ Future<List<dynamic>> readMessagesCopy(int timestamp) async {
     final amount = amountMatch != null
         ? double.tryParse(amountMatch.group(1)!.replaceAll(',', ''))
         : null;
-
-    // Extract the date from the message body
+    final date = message.date;
+    final unixTimestamp = (date!.millisecondsSinceEpoch / 1000).round();
     final dateRegex =
-        RegExp(r'(\d{2}-[A-Za-z]{3}-\d{4} \d{2}:\d{2}:\d{2} [APM]{2})');
+        RegExp(r'\b(\d{2}-\w{3}-\d{4} \d{2}:\d{2}:\d{2} [AP]M)\b');
+
     final dateMatch = dateRegex.firstMatch(message.body ?? '');
     final extractedDate =
         dateMatch != null ? dateMatch.group(1) : message.date.toString();
+    print(extractedDate);
 
-    final unixTimestamp = (message.date!.millisecondsSinceEpoch / 1000).round();
+// Define the input format
+    final inputFormat = DateFormat("dd-MMM-yyyy hh:mm:ss a");
+
+// Parse the extractedDate into a DateTime object
+    final dateTime = inputFormat.parse(extractedDate!);
+
+// Convert the DateTime object into Unix time (in milliseconds)
+    final unixTime = dateTime.secondsSinceEpoch;
+
+    print(unixTime);
+
+    print(amount);
     return {
       'body': message.body,
       'address': message.address,
-      'date':
-          extractedDate, // The extracted date or the original date if extraction fails
+      'date': unixTime,
       'dateSent': message.dateSent,
       'id': message.id,
       'amount': amount,

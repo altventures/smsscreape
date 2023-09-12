@@ -53,7 +53,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               _model.transTimeCopy = await actions.unixTimestampToDateAndTime(
                 getJsonField(
                   _model.readmessagesLoad![_model.looooop!],
-                  r'''$.unixTime''',
+                  r'''$.date''',
                 ),
               );
 
